@@ -1,6 +1,6 @@
 import Image from "next/image";
-import AuthLayout from "../../components/auth/authLayout";
-import Register from "../../components/auth/register";
+import AuthLayout from "../_components/authLayout";
+import Register from "./_components/register";
 
 export default function SignupPage() {
   return (

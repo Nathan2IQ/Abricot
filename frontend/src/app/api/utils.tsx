@@ -1,31 +1,12 @@
-// Configuration de base
-const API_BASE_URL = "http://localhost:8000";
+// PAS de "use client" ici, mais utilisé par des Client Components
+// NE PAS importer "next/headers" ici !
+
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
 
 import type { AuthResponse, LoginRequest, RegisterRequest } from "../types";
 
-// Gestion du token JWT
-export const TokenStorage = {
-  get: (): string | null => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("token");
-    }
-    return null;
-  },
-
-  set: (token: string): void => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("token", token);
-    }
-  },
-
-  remove: (): void => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("token");
-    }
-  },
-};
-
-// Gestion des données utilisateur
+// Gestion des données utilisateur uniquement (pas le token)
 export const UserStorage = {
   get: () => {
     if (typeof window !== "undefined") {
@@ -50,19 +31,14 @@ export const UserStorage = {
 
 // Helper pour les requêtes avec authentification
 const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-  const token = TokenStorage.get();
-
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
 
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
   const response = await fetch(`${API_BASE_URL}${url}`, {
     ...options,
     headers,
+    credentials: "include",
   });
 
   const data = await response.json();
@@ -76,7 +52,6 @@ const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
 
 // API Authentication
 export const authAPI = {
-  // Inscription
   register: async (userData: RegisterRequest): Promise<AuthResponse> => {
     return fetchWithAuth("/auth/register", {
       method: "POST",
@@ -84,7 +59,6 @@ export const authAPI = {
     });
   },
 
-  // Connexion
   login: async (credentials: LoginRequest): Promise<AuthResponse> => {
     return fetchWithAuth("/auth/login", {
       method: "POST",
@@ -92,16 +66,9 @@ export const authAPI = {
     });
   },
 
-  // Récupérer le profil
   getProfile: async () => {
     return fetchWithAuth("/auth/profile", {
       method: "GET",
     });
-  },
-
-  // Déconnexion (côté client)
-  logout: () => {
-    TokenStorage.remove();
-    UserStorage.remove();
   },
 };

@@ -45,3 +45,69 @@ export interface AuthContextType {
   logout: () => void;
   refreshUser: () => Promise<void>;
 }
+
+export interface UpdateProfileRequest {
+  name?: string;
+  email?: string;
+}
+
+export interface UpdatePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  message: string;
+  data?: T;
+  errors?: Array<{ field: string; message: string }>;
+}
+
+export interface UpdateProfileData {
+  name?: string;
+  email?: string;
+}
+
+export interface UpdatePasswordData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+// Types pour les tâches
+export interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  status: "à faire" | "En cours" | "Terminée";
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+  project: {
+    id: string;
+    name: string;
+    description?: string;
+  };
+  assignees: Array<{
+    id: string;
+    user: {
+      id: string;
+      name: string | null;
+      email: string;
+    };
+  }>;
+  comments?: Array<{
+    id: string;
+    content: string;
+    createdAt: string;
+    author: {
+      id: string;
+      name: string | null;
+      email: string;
+    };
+  }>;
+}
+
+export interface AssignedTasksResponse {
+  tasks: Task[];
+}

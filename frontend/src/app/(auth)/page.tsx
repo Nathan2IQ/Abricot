@@ -1,6 +1,6 @@
 import Image from "next/image";
-import AuthLayout from "../components/auth/authLayout";
-import Login from "../components/auth/login";
+import AuthLayout from "./_components/authLayout";
+import Login from "./_components/login";
 
 export default function LoginPage() {
   return (
