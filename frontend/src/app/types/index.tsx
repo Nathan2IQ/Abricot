@@ -79,7 +79,7 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: "à faire" | "En cours" | "Terminée";
+  status: "TODO" | "IN_PROGRESS" | "DONE";
   dueDate?: string;
   createdAt: string;
   updatedAt: string;
@@ -106,6 +106,7 @@ export interface Task {
       email: string;
     };
   }>;
+  commentsCount?: number;
 }
 
 export interface AssignedTasksResponse {

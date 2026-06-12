@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import DashboardHeader from "./_components/Header";
-import ViewToggle from "./_components/ViewToggle";
-import TasksSection from "./_components/TaskSection";
+import DashboardClient from "./_components/DashboardClient";
 import { dashboardServerAPI } from "@/app/api/server-utils"; // ← CHANGER ICI
 
 export default async function DashboardPage() {
@@ -16,8 +15,7 @@ export default async function DashboardPage() {
   return (
     <>
       <DashboardHeader userName={user.name} userEmail={user.email} />
-      <ViewToggle />
-      <TasksSection tasks={tasks} />
+      <DashboardClient tasks={tasks} />
     </>
   );
 }

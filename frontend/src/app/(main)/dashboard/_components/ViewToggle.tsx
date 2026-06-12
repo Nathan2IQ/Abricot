@@ -22,27 +22,43 @@ export default function ViewToggle({ onViewChange }: ViewToggleProps) {
   };
 
   return (
-    <div className="flex items-center justify-start my-10 mx-30 space-x-4">
+    <div
+      className="flex items-center justify-start my-10 mx-30 space-x-4"
+      role="group"
+      aria-label="Basculer entre les vues"
+    >
       <button
         onClick={() => handleViewChange("list")}
-        className={`px-5 py-3 rounded-xl transition-colors ${
+        className={`px-5 py-3 cursor-pointer rounded-xl transition-colors ${
           activeView === "list"
             ? "bg-[#FFE8D9] text-[#D3590B]"
             : "bg-white text-[#D3590B] hover:bg-[#FFE8D9]"
         }`}
+        aria-pressed={activeView === "list"}
+        aria-label="Afficher en liste"
       >
-        <FontAwesomeIcon icon={faSquareCheck} className="mr-2" />
+        <FontAwesomeIcon
+          icon={faSquareCheck}
+          className="mr-2"
+          aria-hidden="true"
+        />
         Liste
       </button>
       <button
         onClick={() => handleViewChange("kanban")}
-        className={`px-5 py-3 rounded-xl transition-colors ${
+        className={`px-5 py-3 cursor-pointer rounded-xl transition-colors ${
           activeView === "kanban"
             ? "bg-[#FFE8D9] text-[#D3590B]"
             : "bg-white text-[#D3590B] hover:bg-[#FFE8D9]"
         }`}
+        aria-pressed={activeView === "kanban"}
+        aria-label="Afficher en kanban"
       >
-        <FontAwesomeIcon icon={faCalendarDays} className="mr-2" />
+        <FontAwesomeIcon
+          icon={faCalendarDays}
+          className="mr-2"
+          aria-hidden="true"
+        />
         Kanban
       </button>
     </div>

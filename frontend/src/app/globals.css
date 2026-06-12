@@ -2,6 +2,7 @@
 
 :root {
   --background: #ffffff;
+  --focus-color: #d3590b;
 }
 
 @media (prefers-color-scheme: light) {
@@ -13,4 +14,53 @@
 body {
   background: var(--background);
   font-family: var(--font-manrope), var(--font-inter), sans-serif;
+}
+
+/* Styles d'accessibilité globaux */
+
+/* Focus visible pour tous les éléments interactifs */
+*:focus-visible {
+  outline: 3px solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+/* Support pour les utilisateurs préférant les animations réduites */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Amélioration du focus pour les boutons et liens */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--focus-color);
+  outline-offset: 2px;
+}
+
+/* Amélioration de la visibilité du focus pour les éléments avec fond sombre */
+.bg-black:focus-visible,
+.bg-gray-800:focus-visible {
+  outline-color: #ffe8d9;
+}
+
+/* Classe pour cacher visuellement mais garder accessible aux lecteurs d'écran */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

@@ -14,6 +14,7 @@ export default function CreateProjectButton() {
     <button
       onClick={handleClick}
       className="px-6 py-3 bg-black text-white rounded-xl shadow-md hover:bg-gray-800 transition-colors"
+      aria-label="Créer un nouveau projet"
     >
       +Créer un projet
     </button>

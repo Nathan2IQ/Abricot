@@ -1,8 +1,9 @@
 "use client";
 
 import { useAuth } from "@/app/context/AuthContext";
+import { useAuthBackground } from "../../context/AuthBackgroundContext";
 import Link from "next/dist/client/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ApiError } from "@/app/types";
 
 // Fonction de validation du mot de passe (même logique que le backend)
@@ -20,6 +21,12 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { register } = useAuth();
+  const { setBackgroundImage } = useAuthBackground();
+
+  useEffect(() => {
+    // Définir l'image de fond pour la page d'inscription
+    setBackgroundImage("/BG_register.jpg");
+  }, [setBackgroundImage]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +92,11 @@ export default function Register() {
 
         {/* Message d'erreur */}
         {error && (
-          <div className="w-80 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div
+            className="w-80 p-3 bg-red-100 border border-red-400 text-red-700 rounded"
+            role="alert"
+            aria-live="assertive"
+          >
             {error}
           </div>
         )}
@@ -105,6 +116,8 @@ export default function Register() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={isLoading}
+              required
+              aria-required="true"
             />
           </div>
           <div>
@@ -121,6 +134,8 @@ export default function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
+              required
+              aria-required="true"
             />
           </div>
           <div>
@@ -137,10 +152,16 @@ export default function Register() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
+              required
+              aria-required="true"
+              aria-describedby="password-help"
             />
 
             {/* Message d'aide pour le mot de passe */}
-            <p className="mt-1 text-xs text-gray-500 mx-auto w-80">
+            <p
+              id="password-help"
+              className="mt-1 text-xs text-gray-500 mx-auto w-80"
+            >
               Le mot de passe doit contenir :
               <br />• Au moins 8 caractères
               <br />• Une majuscule, une minuscule, un chiffre
@@ -150,16 +171,24 @@ export default function Register() {
           <div className="flex justify-center mt-6">
             <button
               type="submit"
-              className="w-60 py-4 border rounded-2xl border-transparent font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2"
+              className="w-60 py-4 border rounded-2xl border-transparent font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
               disabled={isLoading}
+              aria-busy={isLoading}
             >
               {isLoading ? "Inscription en cours..." : "S'inscrire"}
             </button>
           </div>
         </form>
-        <p className="text-[#D3590B] underline cursor-pointer">
+        <button
+          type="button"
+          className="text-[#D3590B] underline cursor-pointer bg-transparent border-none"
+          onClick={() => {
+            // TODO: Implémenter la fonctionnalité "Mot de passe oublié"
+            console.log("Mot de passe oublié");
+          }}
+        >
           Mot de passe oublié ?
-        </p>
+        </button>
       </div>
 
       {/* Lien créer un compte */}

@@ -10,15 +10,15 @@ export default function DashboardHeader({
   userEmail,
 }: DashboardHeaderProps) {
   return (
-    <div className="flex items-center justify-between mt-30 mx-30">
+    <header className="flex items-center justify-between mt-30 mx-30">
       <div className="flex flex-col">
         <h1 className="text-2xl font-bold mb-2">Tableau de bord</h1>
-        <h2 className="text-xl mb-4">
+        <p className="text-xl mb-4">
           Bonjour {userName || userEmail}, voici un aperçu de vos projets et
           tâches
-        </h2>
+        </p>
       </div>
       <CreateProjectButton />
-    </div>
+    </header>
   );
 }

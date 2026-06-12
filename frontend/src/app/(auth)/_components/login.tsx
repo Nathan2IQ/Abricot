@@ -1,15 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/AuthContext";
+import { useAuthBackground } from "../context/AuthBackgroundContext";
 import type { ApiError } from "@/app/types";
 import LoginForm from "./LoginForm";
 import LoginLinks from "./LoginLinks";
 
 export default function Login() {
   const { login } = useAuth();
+  const { setBackgroundImage } = useAuthBackground();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Définir l'image de fond pour la page de connexion
+    setBackgroundImage("/BG_login.jpg");
+  }, [setBackgroundImage]);
 
   const handleSubmit = async (email: string, password: string) => {
     setError("");

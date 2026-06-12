@@ -45,15 +45,17 @@ export default function MainLayout({
     <>
       <header className="bg-white flex items-center justify-between p-2 mx-10">
         <div>
-          <Image
-            src="/Logo_Orange.png"
-            alt="Logo Abricot"
-            width={140}
-            height={50}
-            className="object-contain"
-          />
+          <Link href="/dashboard" className="flex items-center">
+            <Image
+              src="/Logo_Orange.png"
+              alt="Logo Abricot"
+              width={140}
+              height={50}
+              className="object-contain"
+            />
+          </Link>
         </div>
-        <nav className="flex space-x-4">
+        <nav className="flex space-x-4" aria-label="Navigation principale">
           <Link
             href="/dashboard"
             className={`text-[#D3590B] flex items-center rounded-2xl font-medium p-5 focus:outline-none focus:text-white focus:bg-black ${
@@ -61,12 +63,14 @@ export default function MainLayout({
                 ? "text-white bg-black"
                 : "text-[#D3590B] hover:bg-gray-100"
             }`}
+            aria-current={isActive("/dashboard") ? "page" : undefined}
           >
             <FontAwesomeIcon
               icon={faTableCellsLarge}
               className="mr-2"
               width={20}
               height={20}
+              aria-hidden="true"
             />
             Tableau de bord
           </Link>
@@ -78,12 +82,14 @@ export default function MainLayout({
                 ? "text-white bg-black"
                 : "text-[#D3590B] hover:bg-gray-100"
             }`}
+            aria-current={isActive("/projets") ? "page" : undefined}
           >
             <FontAwesomeIcon
               icon={faFolderOpen}
               className="mr-2"
               width={20}
               height={20}
+              aria-hidden="true"
             />
             Projets
           </Link>
@@ -92,7 +98,7 @@ export default function MainLayout({
           <Link
             href="/profile"
             className="text-black bg-[#FFE8D9] rounded-full font-medium p-4 hover:bg-[#FFD4B8] transition-colors"
-            title={user?.name || user?.email}
+            aria-label={`Profil de ${user?.name || user?.email}`}
           >
             {getInitials(user)}
           </Link>
@@ -113,8 +119,14 @@ export default function MainLayout({
           <button
             onClick={logout}
             className="flex cursor-pointer items-center gap-2 text-[#D3590B] hover:text-white hover:bg-[#D3590B] font-medium px-4 py-2 rounded-lg transition-colors"
+            aria-label="Se déconnecter"
           >
-            <FontAwesomeIcon icon={faRightFromBracket} width={16} height={16} />
+            <FontAwesomeIcon
+              icon={faRightFromBracket}
+              width={16}
+              height={16}
+              aria-hidden="true"
+            />
             Déconnexion
           </button>
         </div>
