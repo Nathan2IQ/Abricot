@@ -112,3 +112,30 @@ export interface Task {
 export interface AssignedTasksResponse {
   tasks: Task[];
 }
+
+// Types pour les projets
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  owner: {
+    id: string;
+    email: string;
+    name: string | null;
+  };
+  members: Array<{
+    id: string;
+    role: "ADMIN" | "CONTRIBUTOR";
+    user: {
+      id: string;
+      email: string;
+      name: string | null;
+    };
+  }>;
+  _count?: {
+    tasks: number;
+    completedTasks: number;
+  };
+}

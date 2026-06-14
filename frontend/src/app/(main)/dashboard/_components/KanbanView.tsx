@@ -38,12 +38,12 @@ export default function KanbanView({ tasks }: KanbanViewProps) {
             >
               {/* En-tête de colonne */}
               <div
-                className={`${column.color} px-6 py-4 flex rounded-t-2xl items-center justify-between`}
+                className={`${column.color} px-6 py-4 flex rounded-t-2xl items-center gap-4`}
               >
                 <h3 className="text-lg font-semibold text-gray-900">
                   {column.title}
                 </h3>
-                <span className="bg-white px-3 py-1 text-sm font-medium text-gray-700">
+                <span className="bg-[#E5E7EB] border border-transparent rounded-full px-4 py-1 text-sm font-medium text-[#6B7280]">
                   {columnTasks.length}
                 </span>
               </div>

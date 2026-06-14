@@ -2,7 +2,7 @@
 // Il importe "next/headers" donc ne doit JAMAIS être importé par un Client Component
 
 import { cookies } from "next/headers";
-import type { Task } from "../types";
+import type { Task, Project } from "../types";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000"; // ← Port 8000 comme dans login
@@ -56,6 +56,42 @@ export const dashboardServerAPI = {
     } catch (error) {
       console.error("Erreur lors de la récupération de l'utilisateur:", error);
       return null;
+    }
+  },
+
+  getProjects: async (): Promise<Project[]> => {
+    try {
+      const data = await fetchServerWithAuth("/projects");
+      return data.data?.projects || [];
+    } catch (error) {
+      console.error("Erreur lors de la récupération des projets:", error);
+      return [];
+    }
+  },
+
+  getProjectById: async (projectId: string): Promise<Project | null> => {
+    try {
+      const data = await fetchServerWithAuth(`/projects/${projectId}`);
+      return data.data?.project || null;
+    } catch (error) {
+      console.error(
+        `Erreur lors de la récupération du projet ${projectId}:`,
+        error instanceof Error ? error.message : error,
+      );
+      return null;
+    }
+  },
+
+  getProjectTasks: async (projectId: string): Promise<Task[]> => {
+    try {
+      const data = await fetchServerWithAuth(`/projects/${projectId}/tasks`);
+      return data.data?.tasks || [];
+    } catch (error) {
+      console.error(
+        `Erreur lors de la récupération des tâches du projet ${projectId}:`,
+        error instanceof Error ? error.message : error,
+      );
+      return [];
     }
   },
 };
