@@ -16,9 +16,31 @@ type ViewMode = "list" | "kanban";
 
 interface ProjectTasksProps {
   tasks: Task[];
+  projectId: string;
+  canEdit: boolean;
+  collaborators: Array<{ id: string; name: string | null; email: string }>;
+  onUpdateTask: (
+    taskId: string,
+    payload: {
+      title: string;
+      description?: string;
+      status: Task["status"];
+      dueDate?: string;
+    },
+  ) => Promise<void>;
+  onDeleteTask: (taskId: string) => Promise<void>;
+  onAddComment: (taskId: string, content: string) => Promise<void>;
 }
 
-export default function ProjectTasks({ tasks }: ProjectTasksProps) {
+export default function ProjectTasks({
+  tasks,
+  projectId,
+  canEdit,
+  collaborators,
+  onUpdateTask,
+  onDeleteTask,
+  onAddComment,
+}: ProjectTasksProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -133,7 +155,16 @@ export default function ProjectTasks({ tasks }: ProjectTasksProps) {
           <div className="space-y-4">
             {filteredTasks.length > 0 ? (
               filteredTasks.map((task) => (
-                <ProjetTaskCard key={task.id} task={task} />
+                <ProjetTaskCard
+                  key={task.id}
+                  task={task}
+                  projectId={projectId}
+                  canEdit={canEdit}
+                  collaborators={collaborators}
+                  onUpdateTask={onUpdateTask}
+                  onDeleteTask={onDeleteTask}
+                  onAddComment={onAddComment}
+                />
               ))
             ) : (
               <div className="bg-gray-50 border border-gray-200 text-gray-600 px-6 py-8 rounded-xl text-center">

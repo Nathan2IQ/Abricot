@@ -1,6 +1,10 @@
 import CreateProjectButton from "../../dashboard/_components/CreateProjectButton";
 
-export default function Header() {
+interface HeaderProps {
+  onCreateProject?: () => void;
+}
+
+export default function Header({ onCreateProject }: HeaderProps) {
   return (
     <section className="flex items-center justify-between mt-30 mx-30">
       <div className="flex flex-col align-items items-baseline space-x-4">
@@ -10,7 +14,7 @@ export default function Header() {
         </h2>
       </div>
       <div>
-        <CreateProjectButton />
+        <CreateProjectButton onClick={onCreateProject} />
       </div>
     </section>
   );

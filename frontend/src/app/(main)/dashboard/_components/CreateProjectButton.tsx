@@ -2,11 +2,21 @@
 
 import { useRouter } from "next/navigation";
 
-export default function CreateProjectButton() {
+interface CreateProjectButtonProps {
+  onClick?: () => void;
+}
+
+export default function CreateProjectButton({
+  onClick,
+}: CreateProjectButtonProps) {
   const router = useRouter();
 
   const handleClick = () => {
-    // Navigation vers la page de création de projet
+    if (onClick) {
+      onClick();
+      return;
+    }
+
     router.push("/projets/nouveau");
   };
 

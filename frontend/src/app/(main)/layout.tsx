@@ -51,7 +51,7 @@ export default function MainLayout({
               alt="Logo Abricot"
               width={140}
               height={50}
-              className="object-contain"
+              className="object-contain w-35 h-auto"
             />
           </Link>
         </div>
@@ -112,7 +112,7 @@ export default function MainLayout({
             alt="Logo Abricot"
             width={140}
             height={50}
-            className="object-contain"
+            className="object-contain w-35 h-auto"
           />
         </div>
         <div>

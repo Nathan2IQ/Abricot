@@ -120,6 +120,7 @@ export interface Project {
   description?: string;
   createdAt: string;
   updatedAt: string;
+  userRole?: "ADMIN" | "CONTRIBUTOR" | null;
   owner: {
     id: string;
     email: string;

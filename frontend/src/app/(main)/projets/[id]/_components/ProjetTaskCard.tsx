@@ -9,9 +9,25 @@ import {
   faEllipsisV,
 } from "@fortawesome/free-solid-svg-icons";
 import type { Task } from "@/app/types";
+import TaskEditModal from "./TaskEditModal";
 
 interface ProjetTaskCardProps {
   task: Task;
+  projectId: string;
+  canEdit: boolean;
+  collaborators: Array<{ id: string; name: string | null; email: string }>;
+  onUpdateTask: (
+    taskId: string,
+    payload: {
+      title: string;
+      description?: string;
+      status: Task["status"];
+      dueDate?: string;
+      assigneeIds: string[];
+    },
+  ) => Promise<void>;
+  onDeleteTask: (taskId: string) => Promise<void>;
+  onAddComment: (taskId: string, content: string) => Promise<void>;
 }
 
 // Fonction pour obtenir les initiales d'un nom
@@ -59,9 +75,21 @@ function getStatusBadge(status: Task["status"]): {
   }
 }
 
-export default function ProjetTaskCard({ task }: ProjetTaskCardProps) {
+export default function ProjetTaskCard({
+  task,
+  projectId,
+  canEdit,
+  collaborators,
+  onUpdateTask,
+  onDeleteTask,
+  onAddComment,
+}: ProjetTaskCardProps) {
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [commentDraft, setCommentDraft] = useState("");
+  const [isCommentSubmitting, setIsCommentSubmitting] = useState(false);
+  const [commentError, setCommentError] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
   const statusBadge = getStatusBadge(task.status);
@@ -107,34 +135,35 @@ export default function ProjetTaskCard({ task }: ProjetTaskCardProps) {
         </div>
 
         {/* Menu 3 points */}
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            aria-label="Actions de la tâche"
-          >
-            <FontAwesomeIcon
-              icon={faEllipsisV}
-              className="w-4 h-4 cursor-pointer border p-4 border-gray-200 rounded-xl text-gray-600"
-            />
-          </button>
+        {canEdit && (
+          <div className="relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              aria-label="Actions de la tâche"
+            >
+              <FontAwesomeIcon
+                icon={faEllipsisV}
+                className="w-4 h-4 cursor-pointer border p-4 border-gray-200 rounded-xl text-gray-600"
+              />
+            </button>
 
-          {/* Dropdown menu */}
-          {menuOpen && (
-            <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10">
-              <button className="w-full text-left cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                Modifier le nom
-              </button>
-              <button className="w-full text-left cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
-                Modifier les collaborateurs
-              </button>
-              <div className="border-t border-gray-100 my-1" />
-              <button className="w-full text-left cursor-pointer px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                Supprimer
-              </button>
-            </div>
-          )}
-        </div>
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setIsEditOpen(true);
+                  }}
+                  className="w-full text-left cursor-pointer px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Modifier la tâche
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Échéance */}
@@ -176,7 +205,10 @@ export default function ProjetTaskCard({ task }: ProjetTaskCardProps) {
       {/* Commentaires (dropdown) */}
       <div className="border-t border-gray-200  pt-4">
         <button
-          onClick={() => setCommentsOpen(!commentsOpen)}
+          onClick={() => {
+            setCommentsOpen(!commentsOpen);
+            setCommentError("");
+          }}
           className="w-full flex items-center justify-between cursor-pointer text-gray-700 hover:text-gray-900 transition-colors"
         >
           <div className="flex items-center gap-2">
@@ -193,6 +225,57 @@ export default function ProjetTaskCard({ task }: ProjetTaskCardProps) {
         {/* Liste des commentaires */}
         {commentsOpen && (
           <div className="mt-3 space-y-3">
+            <form
+              onSubmit={async (event) => {
+                event.preventDefault();
+                if (!commentDraft.trim()) return;
+                setIsCommentSubmitting(true);
+                setCommentError("");
+                try {
+                  await onAddComment(task.id, commentDraft.trim());
+                  setCommentDraft("");
+                } catch (error) {
+                  setCommentError(
+                    error instanceof Error
+                      ? error.message
+                      : "Impossible d'ajouter le commentaire",
+                  );
+                } finally {
+                  setIsCommentSubmitting(false);
+                }
+              }}
+              className="bg-gray-50 rounded-lg p-3 border border-gray-100"
+            >
+              <label
+                htmlFor={`comment-${task.id}`}
+                className="block text-xs font-medium text-gray-500 mb-2"
+              >
+                Ajouter un commentaire
+              </label>
+              <textarea
+                id={`comment-${task.id}`}
+                value={commentDraft}
+                onChange={(event) => setCommentDraft(event.target.value)}
+                rows={3}
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
+                placeholder="Écrire un commentaire"
+              />
+              <div className="mt-2 flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isCommentSubmitting || !commentDraft.trim()}
+                  className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Commenter
+                </button>
+              </div>
+              {commentError && (
+                <p className="mt-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                  {commentError}
+                </p>
+              )}
+            </form>
+
             {task.comments && task.comments.length > 0 ? (
               task.comments.map((comment) => (
                 <div
@@ -223,6 +306,17 @@ export default function ProjetTaskCard({ task }: ProjetTaskCardProps) {
           </div>
         )}
       </div>
+
+      <TaskEditModal
+        task={task}
+        projectId={projectId}
+        collaborators={collaborators}
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        onSaveTask={onUpdateTask}
+        onDeleteTask={onDeleteTask}
+        onSaved={() => setIsEditOpen(false)}
+      />
     </div>
   );
 }

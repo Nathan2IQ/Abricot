@@ -7,6 +7,9 @@ import Link from "next/link";
 
 interface ProjectHeaderProps {
   project: Project;
+  currentUserId: string;
+  onEditProject: () => void;
+  onCreateTask: () => void;
 }
 
 // Fonction pour obtenir les initiales (prénom + nom)
@@ -18,8 +21,14 @@ function getInitials(name: string): string {
   return words[0].charAt(0).toUpperCase();
 }
 
-export default function ProjectHeader({ project }: ProjectHeaderProps) {
+export default function ProjectHeader({
+  project,
+  currentUserId,
+  onEditProject,
+  onCreateTask,
+}: ProjectHeaderProps) {
   const totalMembers = project.members.length + 1; // +1 pour le propriétaire
+  const canEditProject = project.owner.id === currentUserId;
 
   return (
     <div className="p-8 mb-6">
@@ -38,9 +47,15 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
           <div className="ml-4">
             <div className="flex items-center gap-3">
               <h1 className="text-2xl font-medium">{project.name}</h1>
-              <button className="text-[#D3590B] text-sm font-medium cursor-pointer underline">
-                Modifier
-              </button>
+              {canEditProject && (
+                <button
+                  type="button"
+                  onClick={onEditProject}
+                  className="text-[#D3590B] text-sm font-medium cursor-pointer underline"
+                >
+                  Modifier
+                </button>
+              )}
             </div>
             {project.description && (
               <p className="text-gray-600 text-lg">{project.description}</p>
@@ -50,13 +65,17 @@ export default function ProjectHeader({ project }: ProjectHeaderProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <button
-            className="px-4 py-4 bg-black text-white rounded-lg flex items-center gap-2"
-            aria-label="Créer une tâche"
-          >
-            <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
-            Créer une tâche
-          </button>
+          {canEditProject && (
+            <button
+              type="button"
+              onClick={onCreateTask}
+              className="px-4 py-4 bg-black text-white rounded-lg flex items-center gap-2"
+              aria-label="Créer une tâche"
+            >
+              <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
+              Créer une tâche
+            </button>
+          )}
           <button className="px-4 py-4 bg-[#D3590B] text-white rounded-lg flex items-center gap-2">
             <FontAwesomeIcon icon={faStar} className="w-4 h-4" />
             IA

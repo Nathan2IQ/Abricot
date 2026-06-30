@@ -1,6 +1,5 @@
 import { redirect, notFound } from "next/navigation";
-import ProjectHeader from "./_components/ProjectHeader";
-import ProjectTasks from "./_components/ProjectTasks";
+import ProjectWorkspaceClient from "./_components/ProjectWorkspaceClient";
 import { dashboardServerAPI } from "@/app/api/server-utils";
 
 interface PageProps {
@@ -29,8 +28,11 @@ export default async function ProjectPage({ params }: PageProps) {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <ProjectHeader project={project} />
-      <ProjectTasks tasks={tasks} />
+      <ProjectWorkspaceClient
+        initialProject={project}
+        initialTasks={tasks}
+        currentUser={user}
+      />
     </div>
   );
 }

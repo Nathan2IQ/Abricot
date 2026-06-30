@@ -2,19 +2,20 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import CreateProjectButton from "./CreateProjectButton";
+import Header from "./Header";
+import ProjectsSection from "./ProjectsSection";
+import type { Project, User } from "@/app/types";
 import CreateProjectModal from "../../_components/CreateProjectModal";
 
-interface DashboardHeaderProps {
-  userName?: string;
-  userEmail?: string;
+interface ProjectsWorkspaceClientProps {
+  initialProjects: Project[];
+  currentUser: User;
 }
 
-export default function DashboardHeader({
-  userId,
-  userName,
-  userEmail,
-}: DashboardHeaderProps) {
+export default function ProjectsWorkspaceClient({
+  initialProjects,
+  currentUser: _currentUser,
+}: ProjectsWorkspaceClientProps) {
   const router = useRouter();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
@@ -23,7 +24,7 @@ export default function DashboardHeader({
     description?: string;
     contributors: string[];
   }) => {
-    console.log("[DashboardHeader] createProject request", payload);
+    console.log("[ProjectsWorkspaceClient] createProject request", payload);
 
     const response = await fetch("/api/projects", {
       method: "POST",
@@ -34,7 +35,7 @@ export default function DashboardHeader({
     });
 
     const data = await response.json().catch(() => null);
-    console.log("[DashboardHeader] createProject response", {
+    console.log("[ProjectsWorkspaceClient] createProject response", {
       status: response.status,
       ok: response.ok,
       data,
@@ -49,17 +50,8 @@ export default function DashboardHeader({
 
   return (
     <>
-      <header className="flex items-center justify-between mt-30 mx-30">
-        <div className="flex flex-col">
-          <h1 className="text-2xl font-bold mb-2">Tableau de bord</h1>
-          <p className="text-xl mb-4">
-            Bonjour {userName || userEmail}, voici un aperçu de vos projets et
-            tâches
-          </p>
-        </div>
-        <CreateProjectButton onClick={() => setIsCreateOpen(true)} />
-      </header>
-
+      <Header onCreateProject={() => setIsCreateOpen(true)} />
+      <ProjectsSection projects={initialProjects} />
       <CreateProjectModal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}

@@ -9,7 +9,7 @@ import prisma from "../lib/prisma";
  */
 export const hasProjectAccess = async (
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<boolean> => {
   try {
     const project = await prisma.project.findFirst({
@@ -43,7 +43,7 @@ export const hasProjectAccess = async (
  */
 export const isProjectAdmin = async (
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<boolean> => {
   try {
     const project = await prisma.project.findFirst({
@@ -78,7 +78,7 @@ export const isProjectAdmin = async (
  */
 export const isProjectOwner = async (
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<boolean> => {
   try {
     const project = await prisma.project.findFirst({
@@ -103,7 +103,7 @@ export const isProjectOwner = async (
  */
 export const canCreateTasks = async (
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<boolean> => {
   return await hasProjectAccess(userId, projectId);
 };
@@ -116,7 +116,7 @@ export const canCreateTasks = async (
  */
 export const canModifyTasks = async (
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<boolean> => {
   return await hasProjectAccess(userId, projectId);
 };
@@ -129,7 +129,7 @@ export const canModifyTasks = async (
  */
 export const canModifyProject = async (
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<boolean> => {
   return await isProjectAdmin(userId, projectId);
 };
@@ -142,7 +142,7 @@ export const canModifyProject = async (
  */
 export const canDeleteProject = async (
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<boolean> => {
   return await isProjectOwner(userId, projectId);
 };
@@ -155,7 +155,7 @@ export const canDeleteProject = async (
  */
 export const getUserProjectRole = async (
   userId: string,
-  projectId: string
+  projectId: string,
 ): Promise<Role | null> => {
   try {
     // Vérifier si l'utilisateur est propriétaire

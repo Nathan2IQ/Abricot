@@ -4,7 +4,12 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
 
-import type { AuthResponse, LoginRequest, RegisterRequest } from "../types";
+import type {
+  AuthResponse,
+  LoginRequest,
+  Project,
+  RegisterRequest,
+} from "../types";
 
 // Gestion des données utilisateur uniquement (pas le token)
 export const UserStorage = {
@@ -70,5 +75,29 @@ export const authAPI = {
     return fetchWithAuth("/auth/profile", {
       method: "GET",
     });
+  },
+};
+
+const PROJECT_STORAGE_KEY = "projects";
+
+export const ProjectStorage = {
+  get: (): Project[] => {
+    if (typeof window === "undefined") {
+      return [];
+    }
+
+    const projectsStr = localStorage.getItem(PROJECT_STORAGE_KEY);
+    return projectsStr ? JSON.parse(projectsStr) : [];
+  },
+
+  set: (projects: Project[]): void => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(PROJECT_STORAGE_KEY, JSON.stringify(projects));
+    }
+  },
+
+  add: (project: Project): void => {
+    const projects = ProjectStorage.get();
+    ProjectStorage.set([project, ...projects]);
   },
 };

@@ -29,7 +29,7 @@ import { getTaskComments } from "../utils/taskComments";
  */
 export const createTask = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const projectId = req.params.id;
@@ -64,7 +64,7 @@ export const createTask = async (
       sendValidationError(
         res,
         "Données de création de tâche invalides",
-        validationErrors
+        validationErrors,
       );
       return;
     }
@@ -93,7 +93,7 @@ export const createTask = async (
         res,
         "Vous n'avez pas les permissions pour créer des tâches dans ce projet",
         "FORBIDDEN",
-        403
+        403,
       );
       return;
     }
@@ -102,14 +102,14 @@ export const createTask = async (
     if (assigneeIds && assigneeIds.length > 0) {
       const areValidMembers = await validateProjectMembers(
         projectId,
-        assigneeIds
+        assigneeIds,
       );
       if (!areValidMembers) {
         sendError(
           res,
           "Certains utilisateurs assignés ne sont pas membres du projet",
           "INVALID_ASSIGNEES",
-          400
+          400,
         );
         return;
       }
@@ -159,7 +159,7 @@ export const createTask = async (
         res,
         "Erreur lors de la récupération de la tâche créée",
         "TASK_NOT_FOUND",
-        404
+        404,
       );
       return;
     }
@@ -281,7 +281,7 @@ export const getTasks = async (req: Request, res: Response): Promise<void> => {
           assignees,
           comments,
         };
-      })
+      }),
     );
 
     sendSuccess(res, "Tâches récupérées avec succès", {
@@ -367,7 +367,7 @@ export const getTask = async (req: Request, res: Response): Promise<void> => {
  */
 export const updateTask = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const projectId = req.params.id;
@@ -400,7 +400,7 @@ export const updateTask = async (
       sendValidationError(
         res,
         "Données de mise à jour invalides",
-        validationErrors
+        validationErrors,
       );
       return;
     }
@@ -419,7 +419,7 @@ export const updateTask = async (
         res,
         "Vous n'avez pas les permissions pour modifier des tâches dans ce projet",
         "FORBIDDEN",
-        403
+        403,
       );
       return;
     }
@@ -441,14 +441,14 @@ export const updateTask = async (
     if (assigneeIds && assigneeIds.length > 0) {
       const areValidMembers = await validateProjectMembers(
         projectId,
-        assigneeIds
+        assigneeIds,
       );
       if (!areValidMembers) {
         sendError(
           res,
           "Certains utilisateurs assignés ne sont pas membres du projet",
           "INVALID_ASSIGNEES",
-          400
+          400,
         );
         return;
       }
@@ -522,7 +522,7 @@ export const updateTask = async (
  */
 export const deleteTask = async (
   req: Request,
-  res: Response
+  res: Response,
 ): Promise<void> => {
   try {
     const projectId = req.params.id;
@@ -548,7 +548,7 @@ export const deleteTask = async (
         res,
         "Vous n'avez pas les permissions pour supprimer des tâches dans ce projet",
         "FORBIDDEN",
-        403
+        403,
       );
       return;
     }
