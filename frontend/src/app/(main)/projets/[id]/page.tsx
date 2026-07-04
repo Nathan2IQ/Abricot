@@ -27,7 +27,7 @@ export default async function ProjectPage({ params }: PageProps) {
   const tasks = await dashboardServerAPI.getProjectTasks(id);
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-4 sm:gap-6 p-3 sm:p-4 lg:p-6">
       <ProjectWorkspaceClient
         initialProject={project}
         initialTasks={tasks}

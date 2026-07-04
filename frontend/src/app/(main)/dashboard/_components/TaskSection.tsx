@@ -38,15 +38,20 @@ export default function TaskList({ tasks }: TaskListProps) {
 
   return (
     <section
-      className="bg-white border border-gray-200 rounded-xl p-10 mb-20 mx-30"
+      className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-10"
       aria-labelledby="tasks-heading"
     >
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0 mb-6">
         <div>
-          <h3 id="tasks-heading" className="text-xl font-semibold mb-3">
+          <h3
+            id="tasks-heading"
+            className="text-base sm:text-lg lg:text-xl font-semibold mb-2"
+          >
             Mes tâches assignées
           </h3>
-          <p className="text-gray-500">Par ordre de priorité</p>
+          <p className="text-sm sm:text-base lg:text-lg text-gray-600">
+            Par ordre de priorité
+          </p>
         </div>
         <div className="relative">
           <label htmlFor="search-tasks" className="sr-only">
@@ -58,12 +63,12 @@ export default function TaskList({ tasks }: TaskListProps) {
             placeholder="Rechercher une tâche"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full py-4 px-8 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full py-3 lg:py-4 px-6 lg:px-8 pr-10 border border-gray-300 rounded-md text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             aria-label="Rechercher une tâche"
           />
           <FontAwesomeIcon
             icon={faSearch}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none"
             aria-hidden="true"
           />
         </div>

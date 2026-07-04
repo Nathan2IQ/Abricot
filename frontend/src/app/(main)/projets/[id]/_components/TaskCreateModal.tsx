@@ -99,34 +99,37 @@ export default function TaskCreateModal({
       aria-modal="true"
       aria-labelledby="task-create-title"
     >
-      <div className="flex min-h-full items-center justify-center p-4">
+      <div className="flex min-h-full items-center justify-center p-3 sm:p-4 lg:p-6">
         <div
-          className="w-full max-w-2xl rounded-2xl bg-white shadow-2xl"
+          className="w-full max-w-[95vw] sm:max-w-lg lg:max-w-2xl rounded-lg sm:rounded-2xl bg-white shadow-2xl"
           onClick={(event) => event.stopPropagation()}
         >
-          <div className="flex items-start justify-between border-b border-gray-200 px-6 py-4">
+          <div className="flex items-start justify-between border-b border-gray-200 px-4 py-3 sm:px-6 sm:py-4">
             <div>
               <h2
                 id="task-create-title"
-                className="text-xl font-semibold text-gray-900"
+                className="text-lg sm:text-xl font-semibold text-gray-900"
               >
                 Créer une tâche
               </h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-xs sm:text-sm text-gray-600">
                 Une tâche sera ajoutée au projet {project.name}.
               </p>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-800"
               aria-label="Fermer la fenêtre de création"
             >
               <FontAwesomeIcon icon={faTimes} className="h-5 w-5" />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5 px-6 py-6">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4 sm:space-y-5 px-4 py-4 sm:px-6 sm:py-6"
+          >
             <div>
               <label
                 htmlFor="task-create-title"

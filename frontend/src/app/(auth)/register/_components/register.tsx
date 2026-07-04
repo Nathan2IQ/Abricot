@@ -85,15 +85,17 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between w-full space-y-6">
+    <div className="flex flex-col items-center justify-between w-full space-y-4 sm:space-y-6">
       {/* Formulaire principal */}
-      <div className="flex flex-col items-center w-full space-y-6 mt-28">
-        <h1 className="text-3xl font-bold text-[#D3590B]">Inscription</h1>
+      <div className="flex flex-col items-center w-full space-y-4 sm:space-y-6 mt-16 sm:mt-20 lg:mt-28">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#D3590B]">
+          Inscription
+        </h1>
 
         {/* Message d'erreur */}
         {error && (
           <div
-            className="w-80 p-3 bg-red-100 border border-red-400 text-red-700 rounded"
+            className="w-full max-w-xs sm:max-w-sm lg:w-80 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm"
             role="alert"
             aria-live="assertive"
           >
@@ -101,18 +103,18 @@ export default function Register() {
           </div>
         )}
 
-        <form className="space-y-4 w-full" onSubmit={handleSubmit}>
+        <form className="space-y-3 sm:space-y-4 w-full" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="name"
-              className="block text-sm ml-16 font-medium text-gray-700"
+              className="block text-sm ml-4 sm:ml-8 lg:ml-16 font-medium text-gray-700"
             >
               Nom complet
             </label>
             <input
               type="text"
               id="name"
-              className="mt-1 block mx-auto w-80 py-4 px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] sm:text-sm"
+              className="mt-1 block mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md py-2.5 sm:py-3 px-3 sm:px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] text-sm"
               value={name}
               onChange={(e) => setName(e.target.value)}
               disabled={isLoading}
@@ -123,14 +125,14 @@ export default function Register() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm ml-16 font-medium text-gray-700"
+              className="block text-sm ml-4 sm:ml-8 lg:ml-16 font-medium text-gray-700"
             >
               Email
             </label>
             <input
               type="email"
               id="email"
-              className="mt-1 block mx-auto w-80 py-4 px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] sm:text-sm"
+              className="mt-1 block mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md py-2.5 sm:py-3 px-3 sm:px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] text-sm"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
@@ -141,14 +143,14 @@ export default function Register() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm ml-16 font-medium text-gray-700"
+              className="block text-sm ml-4 sm:ml-8 lg:ml-16 font-medium text-gray-700"
             >
               Mot de passe
             </label>
             <input
               type="password"
               id="password"
-              className="mt-1 mx-auto block w-80 py-4 px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] sm:text-sm"
+              className="mt-1 mx-auto block w-full max-w-xs sm:max-w-sm lg:max-w-md py-2.5 sm:py-3 px-3 sm:px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] text-sm"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
@@ -160,7 +162,7 @@ export default function Register() {
             {/* Message d'aide pour le mot de passe */}
             <p
               id="password-help"
-              className="mt-1 text-xs text-gray-500 mx-auto w-80"
+              className="mt-1 text-xs text-gray-600 mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md px-2 sm:px-0"
             >
               Le mot de passe doit contenir :
               <br />• Au moins 8 caractères
@@ -171,7 +173,7 @@ export default function Register() {
           <div className="flex justify-center mt-6">
             <button
               type="submit"
-              className="w-60 py-4 border rounded-2xl border-transparent font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="w-48 sm:w-52 lg:w-60 py-2.5 sm:py-3 border rounded-xl sm:rounded-2xl border-transparent text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed cursor-pointer"
               disabled={isLoading}
               aria-busy={isLoading}
             >

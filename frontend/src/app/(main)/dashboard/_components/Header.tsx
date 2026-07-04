@@ -49,10 +49,12 @@ export default function DashboardHeader({
 
   return (
     <>
-      <header className="flex items-center justify-between mt-30 mx-30">
+      <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mt-6 sm:mt-10">
         <div className="flex flex-col">
-          <h1 className="text-2xl font-bold mb-2">Tableau de bord</h1>
-          <p className="text-xl mb-4">
+          <h1 className="text-lg sm:text-xl lg:text-3xl font-bold mb-2">
+            Tableau de bord
+          </h1>
+          <p className="text-sm sm:text-base lg:text-lg mb-2 sm:mb-4">
             Bonjour {userName || userEmail}, voici un aperçu de vos projets et
             tâches
           </p>

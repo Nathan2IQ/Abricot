@@ -23,13 +23,13 @@ export default function ViewToggle({ onViewChange }: ViewToggleProps) {
 
   return (
     <div
-      className="flex items-center justify-start my-10 mx-30 space-x-4"
+      className="flex items-center justify-start my-4 sm:my-6 space-x-2 sm:space-x-4"
       role="group"
       aria-label="Basculer entre les vues"
     >
       <button
         onClick={() => handleViewChange("list")}
-        className={`px-5 py-3 cursor-pointer rounded-xl transition-colors ${
+        className={`px-4 sm:px-5 lg:px-6 py-2 sm:py-3 text-sm lg:text-base cursor-pointer rounded-xl transition-colors ${
           activeView === "list"
             ? "bg-[#FFE8D9] text-[#D3590B]"
             : "bg-white text-[#D3590B] hover:bg-[#FFE8D9]"
@@ -46,7 +46,7 @@ export default function ViewToggle({ onViewChange }: ViewToggleProps) {
       </button>
       <button
         onClick={() => handleViewChange("kanban")}
-        className={`px-5 py-3 cursor-pointer rounded-xl transition-colors ${
+        className={`px-4 sm:px-5 lg:px-6 py-2 sm:py-3 text-sm lg:text-base cursor-pointer rounded-xl transition-colors ${
           activeView === "kanban"
             ? "bg-[#FFE8D9] text-[#D3590B]"
             : "bg-white text-[#D3590B] hover:bg-[#FFE8D9]"

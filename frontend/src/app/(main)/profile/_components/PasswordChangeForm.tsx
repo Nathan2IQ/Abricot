@@ -53,7 +53,7 @@ export default function PasswordChangeForm({
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B]"
           aria-describedby="newPassword-help"
         />
-        <p id="newPassword-help" className="mt-1 text-xs text-gray-500">
+        <p id="newPassword-help" className="mt-1 text-xs text-gray-600">
           Minimum 8 caractères
         </p>
       </div>

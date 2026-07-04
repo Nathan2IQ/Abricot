@@ -85,20 +85,20 @@ export default function CreateProjectModal({
       aria-modal="true"
       aria-labelledby="project-create-title"
     >
-      <div className="flex min-h-full items-center justify-center p-4">
+      <div className="flex min-h-full items-center justify-center p-3 sm:p-4 lg:p-6">
         <div
-          className="w-full max-w-xl rounded-2xl bg-white shadow-2xl"
+          className="w-full max-w-[95vw] sm:max-w-lg lg:max-w-xl rounded-lg sm:rounded-2xl bg-white shadow-2xl"
           onClick={(event) => event.stopPropagation()}
         >
-          <div className="flex items-start justify-between border-b border-gray-200 px-6 py-4">
+          <div className="flex items-start justify-between border-b border-gray-200 px-4 py-3 sm:px-6 sm:py-4">
             <div>
               <h2
                 id="project-create-title"
-                className="text-xl font-semibold text-gray-900"
+                className="text-lg sm:text-xl font-semibold text-gray-900"
               >
                 Créer un projet
               </h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-gray-600">
                 Renseigne le titre, la description et les collaborateurs à
                 inviter.
               </p>
@@ -106,14 +106,17 @@ export default function CreateProjectModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-800"
               aria-label="Fermer la fenêtre de création"
             >
               <FontAwesomeIcon icon={faTimes} className="h-5 w-5" />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5 px-6 py-6">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-3 sm:space-y-4 px-4 py-4 sm:px-6 sm:py-6"
+          >
             <div>
               <label
                 htmlFor="project-name"
@@ -125,7 +128,7 @@ export default function CreateProjectModal({
                 id="project-name"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 sm:px-4 sm:py-3 text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
                 required
                 minLength={2}
                 maxLength={120}
@@ -143,8 +146,8 @@ export default function CreateProjectModal({
                 id="project-description"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                rows={4}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
                 placeholder="Décris l'objectif du projet"
               />
             </div>
@@ -160,11 +163,11 @@ export default function CreateProjectModal({
                 id="project-contributors"
                 value={contributorsInput}
                 onChange={(event) => setContributorsInput(event.target.value)}
-                rows={4}
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
                 placeholder="Email1, email2, email3"
               />
-              <p className="mt-2 text-xs text-gray-500">
+              <p className="mt-2 text-xs text-gray-600">
                 Sépare les emails par une virgule, un point-virgule ou un retour
                 à la ligne.
               </p>
@@ -179,18 +182,18 @@ export default function CreateProjectModal({
               </p>
             )}
 
-            <div className="flex justify-end gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-lg border border-gray-300 px-5 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                className="w-full sm:w-auto cursor-pointer rounded-lg border border-gray-300 px-4 py-2.5 sm:px-5 sm:py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
               >
                 Annuler
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="rounded-lg bg-black px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full sm:w-auto cursor-pointer rounded-lg bg-black px-4 py-2.5 sm:px-5 sm:py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isSubmitting ? "Création..." : "Créer"}
               </button>

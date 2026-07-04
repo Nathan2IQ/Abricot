@@ -98,13 +98,13 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-[80vh] bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[75vw] mx-auto my-10">
-        <div className="bg-white shadow rounded-lg py-10 px-20">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">
+    <div className="min-h-[80vh] bg-gray-50 py-4 sm:py-6 px-2 sm:px-4 lg:px-8">
+      <div className="max-w-full sm:max-w-2xl lg:max-w-4xl mx-auto my-4 sm:my-6">
+        <div className="bg-white shadow rounded-lg py-4 px-4 sm:py-6 sm:px-8 lg:py-8 lg:px-12">
+          <h1 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
             Mon compte
           </h1>
-          <h2 className="text-lg font-medium text-gray-500 mb-10">
+          <h2 className="text-sm sm:text-base font-medium text-gray-700 mb-6 sm:mb-10">
             {profileData.name}
           </h2>
 
@@ -120,7 +120,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-10">
+          <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-10">
             {/* Section Informations personnelles */}
             <div>
               <ProfileInfoForm
@@ -160,7 +160,7 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="px-10 py-3 text-medium font-medium text-white bg-black rounded-md hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto cursor-pointer px-5 sm:px-8 py-2 sm:py-2.5 text-xs sm:text-sm font-medium text-white bg-black rounded-md hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Modification..." : "Modifier les informations"}
               </button>

@@ -26,6 +26,7 @@ interface ProjectTasksProps {
       description?: string;
       status: Task["status"];
       dueDate?: string;
+      assigneeIds: string[];
     },
   ) => Promise<void>;
   onDeleteTask: (taskId: string) => Promise<void>;
@@ -68,43 +69,53 @@ export default function ProjectTasks({
   }, [tasks, statusFilter, searchQuery]);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-8">
+    <div className="bg-white border border-gray-200 rounded-xl p-3 sm:p-6 lg:p-8">
       {/* En-tête avec titre et contrôles */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 sm:mb-6 gap-4">
         <div>
-          <h2 className="text-xl font-semibold mb-1">Tâches</h2>
-          <p className="text-gray-500 text-sm">Par ordre de priorité</p>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-1">
+            Tâches
+          </h2>
+          <p className="text-gray-600 text-xs sm:text-sm lg:text-base">
+            Par ordre de priorité
+          </p>
         </div>
 
-        <div className="flex items-center gap-8">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
           {/* Toggle Vue Liste/Calendrier */}
-          <div className="flex p-1">
+          <div className="flex p-1 gap-2">
             <button
               onClick={() => setViewMode("list")}
-              className={`px-5 py-3 rounded-md cursor-pointer flex mr-4 items-center gap-2 text-sm transition-colors ${
+              className={`flex-1 sm:flex-none px-3 sm:px-5 lg:px-6 py-2 sm:py-3 rounded-md cursor-pointer flex items-center justify-center gap-2 text-xs sm:text-sm lg:text-base transition-colors ${
                 viewMode === "list"
                   ? "bg-[#FFE8D9] text-[#D3590B]"
                   : "text-[#D3590B]"
               }`}
             >
-              <FontAwesomeIcon icon={faListUl} className="w-4 h-4" />
-              Liste
+              <FontAwesomeIcon
+                icon={faListUl}
+                className="w-3 h-3 sm:w-4 sm:h-4"
+              />
+              <span className="hidden sm:inline">Liste</span>
             </button>
             <button
               onClick={() => setViewMode("kanban")}
-              className={`px-5 py-3 rounded-md cursor-pointer flex items-center gap-2 text-sm transition-colors ${
+              className={`flex-1 sm:flex-none px-3 sm:px-5 lg:px-6 py-2 sm:py-3 rounded-md cursor-pointer flex items-center justify-center gap-2 text-xs sm:text-sm lg:text-base transition-colors ${
                 viewMode === "kanban"
                   ? "bg-[#FFE8D9] text-[#D3590B]"
                   : "text-[#D3590B]"
               }`}
             >
-              <FontAwesomeIcon icon={faCalendar} className="w-4 h-4" />
-              Calendrier
+              <FontAwesomeIcon
+                icon={faCalendar}
+                className="w-3 h-3 sm:w-4 sm:h-4"
+              />
+              <span className="hidden sm:inline">Calendrier</span>
             </button>
           </div>
 
           {/* Filtre Statut */}
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-none">
             <label htmlFor="status-filter" className="sr-only">
               Filtrer par statut
             </label>
@@ -112,7 +123,7 @@ export default function ProjectTasks({
               id="status-filter"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-5 py-3 border border-[#E5E7EB] text-[#6B7280] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent appearance-none pr-10 bg-white"
+              className="w-full px-3 sm:px-5 py-2 sm:py-3 border border-[#E5E7EB] text-[#6B7280] rounded-lg text-xs sm:text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent appearance-none pr-8 sm:pr-10 bg-white"
             >
               <option value="all">Statut</option>
               <option value="TODO">À faire</option>
@@ -121,28 +132,28 @@ export default function ProjectTasks({
             </select>
             <FontAwesomeIcon
               icon={faChevronDown}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none w-3 h-3"
+              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none w-3 h-3"
               aria-hidden="true"
             />
           </div>
 
           {/* Barre de recherche */}
-          <div className="relative">
+          <div className="relative flex-1 sm:flex-none">
             <label htmlFor="search-tasks" className="sr-only">
               Rechercher une tâche
             </label>
             <input
               type="search"
               id="search-tasks"
-              placeholder="Rechercher une tâche"
+              placeholder="Rechercher"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-70 px-5 py-3 pr-10 border border-[#E5E7EB] text-[#6B7280] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent appearance-none bg-white"
+              className="w-full sm:w-70 px-3 sm:px-5 py-2 sm:py-3 pr-8 sm:pr-10 border border-[#E5E7EB] text-[#6B7280] rounded-lg text-xs sm:text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent appearance-none bg-white"
               aria-label="Rechercher une tâche"
             />
             <FontAwesomeIcon
               icon={faSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none w-4 h-4"
+              className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none w-3 h-3 sm:w-4 sm:h-4"
               aria-hidden="true"
             />
           </div>

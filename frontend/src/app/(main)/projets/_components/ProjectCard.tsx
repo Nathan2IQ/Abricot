@@ -29,15 +29,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
   return (
     <Link href={`/projets/${project.id}`}>
-      <article className="bg-white border min-h-85 border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col">
+      <article className="bg-white border min-h-85 border-gray-200 rounded-xl p-4 sm:p-5 lg:p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col">
         {/* En-tête avec nom */}
         <div className="mb-3">
-          <h3 className="text-lg font-semibold">{project.name}</h3>
+          <h3 className="text-base sm:text-lg lg:text-xl font-semibold break-words">
+            {project.name}
+          </h3>
         </div>
 
         {/* Description */}
         {project.description && (
-          <p className="text-gray-600 text-sm mb-6 line-clamp-2">
+          <p className="text-gray-600 text-sm lg:text-base mb-4 line-clamp-2 break-words">
             {project.description}
           </p>
         )}

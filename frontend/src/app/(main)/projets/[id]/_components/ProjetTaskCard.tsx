@@ -65,7 +65,7 @@ function getStatusBadge(status: Task["status"]): {
     case "IN_PROGRESS":
       return {
         label: "En cours",
-        className: "bg-[#FFF0D7] text-[#E08D00]",
+        className: "bg-[#FFF0D7] text-[#C67500]",
       };
     case "DONE":
       return {
@@ -112,23 +112,23 @@ export default function ProjetTaskCard({
   }, [menuOpen]);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-md transition-shadow">
+    <div className="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 lg:p-8 hover:shadow-md transition-shadow">
       {/* En-tête : Titre + Badge statut + Menu actions */}
-      <div className="flex items-start justify-between mb-3">
-        <div>
-          <div className="flex-1 flex items-center gap-3">
-            <h3 className="text-lg font-semibold text-gray-900">
+      <div className="flex items-start justify-between mb-3 gap-2">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+            <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-gray-900 wrap-break-words">
               {task.title}
             </h3>
             <span
-              className={`px-3 py-1 rounded-full text-xs font-medium ${statusBadge.className}`}
+              className={`px-2 sm:px-3 py-1 rounded-full text-xs lg:text-sm font-medium ${statusBadge.className} self-start`}
             >
               {statusBadge.label}
             </span>
           </div>
           {/* Description */}
           {task.description && (
-            <p className="text-gray-600 text-sm mb-4 mt-2">
+            <p className="text-gray-600 text-xs sm:text-sm lg:text-base mb-4 wrap-break-words">
               {task.description}
             </p>
           )}
@@ -136,15 +136,15 @@ export default function ProjetTaskCard({
 
         {/* Menu 3 points */}
         {canEdit && (
-          <div className="relative" ref={menuRef}>
+          <div className="relative shrink-0" ref={menuRef}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
               aria-label="Actions de la tâche"
             >
               <FontAwesomeIcon
                 icon={faEllipsisV}
-                className="w-4 h-4 cursor-pointer border p-4 border-gray-200 rounded-xl text-gray-600"
+                className="w-3 h-3 sm:w-4 sm:h-4 cursor-pointer text-gray-600"
               />
             </button>
 
@@ -172,7 +172,7 @@ export default function ProjetTaskCard({
           Échéance :
           <FontAwesomeIcon
             icon={faCalendar}
-            className="w-4 h-4 text-gray-400 ml-1"
+            className="w-4 h-4 text-gray-600 ml-1"
           />
         </span>
         <span className="text-sm text-gray-700 font-medium">
@@ -183,7 +183,7 @@ export default function ProjetTaskCard({
       {/* Collaborateurs assignés */}
       {task.assignees && task.assignees.length > 0 && (
         <div className="mb-4">
-          <p className="text-xs text-gray-500 font-medium mb-2">Assigné à :</p>
+          <p className="text-xs text-gray-600 font-medium mb-2">Assigné à :</p>
           <div className="flex flex-wrap gap-2">
             {task.assignees.map((assignee) => (
               <div
@@ -248,7 +248,7 @@ export default function ProjetTaskCard({
             >
               <label
                 htmlFor={`comment-${task.id}`}
-                className="block text-xs font-medium text-gray-500 mb-2"
+                className="block text-xs font-medium text-gray-700 mb-2"
               >
                 Ajouter un commentaire
               </label>
@@ -289,7 +289,7 @@ export default function ProjetTaskCard({
                     <span className="text-sm font-medium text-gray-900">
                       {comment.author.name || comment.author.email}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-600">
                       {formatDate(comment.createdAt)}
                     </span>
                   </div>
@@ -299,7 +299,7 @@ export default function ProjetTaskCard({
                 </div>
               ))
             ) : (
-              <p className="text-sm text-gray-500 italic py-2">
+              <p className="text-sm text-gray-600 italic py-2">
                 Aucun commentaire
               </p>
             )}

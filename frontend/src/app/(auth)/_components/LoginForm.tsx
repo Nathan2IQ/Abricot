@@ -25,7 +25,7 @@ export default function LoginForm({
     <>
       {error && (
         <div
-          className="w-80 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm"
+          className="w-full max-w-xs sm:max-w-sm lg:w-80 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm"
           role="alert"
           aria-live="assertive"
         >
@@ -37,7 +37,7 @@ export default function LoginForm({
         <div>
           <label
             htmlFor="email"
-            className="block text-sm ml-16 font-medium text-gray-700"
+            className="block text-sm ml-4 sm:ml-8 lg:ml-16 font-medium text-gray-700"
           >
             Email
           </label>
@@ -47,7 +47,7 @@ export default function LoginForm({
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
-            className="mt-1 block mx-auto w-80 py-4 px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] sm:text-sm"
+            className="mt-1 block mx-auto w-full max-w-xs sm:max-w-sm lg:max-w-md py-2.5 sm:py-3 px-3 sm:px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] text-sm"
             required
             aria-required="true"
           />
@@ -56,7 +56,7 @@ export default function LoginForm({
         <div>
           <label
             htmlFor="password"
-            className="block text-sm ml-16 font-medium text-gray-700"
+            className="block text-sm ml-4 sm:ml-8 lg:ml-16 font-medium text-gray-700"
           >
             Mot de passe
           </label>
@@ -66,7 +66,7 @@ export default function LoginForm({
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             disabled={loading}
-            className="mt-1 mx-auto block w-80 py-4 px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] sm:text-sm"
+            className="mt-1 mx-auto block w-full max-w-xs sm:max-w-sm lg:max-w-md py-2.5 sm:py-3 px-3 sm:px-4 border border-[#E5E7EB] bg-white focus:outline-none focus:ring-[#D3590B] focus:border-[#D3590B] text-sm"
             required
             aria-required="true"
           />
@@ -76,7 +76,7 @@ export default function LoginForm({
           <button
             type="submit"
             disabled={loading}
-            className="w-60 py-4 cursor-pointer border rounded-2xl border-transparent font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
+            className="w-48 sm:w-52 lg:w-60 py-2.5 sm:py-3 cursor-pointer border rounded-xl sm:rounded-2xl border-transparent text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:bg-gray-400 disabled:cursor-not-allowed"
             aria-busy={loading}
           >
             {loading ? "Connexion..." : "Se connecter"}

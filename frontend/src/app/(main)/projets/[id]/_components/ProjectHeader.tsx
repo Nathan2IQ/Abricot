@@ -10,6 +10,7 @@ interface ProjectHeaderProps {
   currentUserId: string;
   onEditProject: () => void;
   onCreateTask: () => void;
+  onAICreateTask: () => void;
 }
 
 // Fonction pour obtenir les initiales (prénom + nom)
@@ -26,68 +27,87 @@ export default function ProjectHeader({
   currentUserId,
   onEditProject,
   onCreateTask,
+  onAICreateTask,
 }: ProjectHeaderProps) {
   const totalMembers = project.members.length + 1; // +1 pour le propriétaire
   const canEditProject = project.owner.id === currentUserId;
 
   return (
-    <div className="p-8 mb-6">
+    <div className="p-3 sm:p-6 mb-4 sm:mb-6">
       {/* En-tête avec nom et actions */}
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex ">
+      <div className="flex flex-col lg:flex-row items-start justify-between mb-4 sm:mb-6 gap-4">
+        <div className="flex flex-col sm:flex-row w-full lg:w-auto">
           <Link
             href="/projets"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#FF6B35] transition-colors"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#FF6B35] transition-colors mb-3 sm:mb-0"
           >
             <FontAwesomeIcon
               icon={faArrowLeft}
-              className="w-4 h-4 border border-gray-300 bg-white rounded-xl p-4"
+              className="w-3 h-3 sm:w-4 sm:h-4 border border-gray-300 bg-white rounded-xl p-3 sm:p-4"
             />
           </Link>
-          <div className="ml-4">
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-medium">{project.name}</h1>
+          <div className="sm:ml-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+              <h1 className="text-lg sm:text-xl lg:text-3xl font-medium">
+                {project.name}
+              </h1>
               {canEditProject && (
                 <button
                   type="button"
                   onClick={onEditProject}
-                  className="text-[#D3590B] text-sm font-medium cursor-pointer underline"
+                  className="text-[#D3590B] text-xs sm:text-sm lg:text-base font-medium cursor-pointer underline self-start"
                 >
                   Modifier
                 </button>
               )}
             </div>
             {project.description && (
-              <p className="text-gray-600 text-lg">{project.description}</p>
+              <p className="text-gray-600 text-sm sm:text-base lg:text-lg mt-1">
+                {project.description}
+              </p>
             )}
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 w-full lg:w-auto">
           {canEditProject && (
             <button
               type="button"
               onClick={onCreateTask}
-              className="px-4 py-4 bg-black text-white rounded-lg flex items-center gap-2"
+              className="flex-1 lg:flex-none px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-xs sm:text-sm lg:text-base bg-black text-white cursor-pointer rounded-lg flex items-center justify-center gap-2"
               aria-label="Créer une tâche"
             >
-              <FontAwesomeIcon icon={faPlus} className="w-4 h-4" />
-              Créer une tâche
+              <FontAwesomeIcon
+                icon={faPlus}
+                className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5"
+              />
+              <span className="hidden sm:inline">Créer une tâche</span>
+              <span className="sm:hidden">Créer</span>
             </button>
           )}
-          <button className="px-4 py-4 bg-[#D3590B] text-white rounded-lg flex items-center gap-2">
-            <FontAwesomeIcon icon={faStar} className="w-4 h-4" />
-            IA
-          </button>
+          {canEditProject && (
+            <button
+              type="button"
+              onClick={onAICreateTask}
+              className="flex-1 lg:flex-none px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-xs sm:text-sm lg:text-base bg-[#D3590B] text-white cursor-pointer rounded-lg flex items-center justify-center gap-2 hover:bg-[#b94a09] transition-colors"
+              aria-label="Créer une tâche avec l'IA"
+            >
+              <FontAwesomeIcon
+                icon={faStar}
+                className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5"
+              />
+              IA
+            </button>
+          )}
         </div>
       </div>
 
       {/* Section Contributeurs */}
-      <div className="bg-[#F3F4F6] flex justify-between items-center mt-20 rounded-xl p-6">
-        <h2 className="text-sm font-semibold">
+      <div className="bg-[#F3F4F6] flex flex-col sm:flex-row justify-between items-start sm:items-center mt-8 sm:mt-12 lg:mt-20 rounded-xl p-4 sm:p-6 gap-2">
+        <h2 className="text-xs sm:text-sm lg:text-base font-semibold">
           Contributeurs{" "}
-          <span className="text-gray-500 font-normal">
+          <span className="text-gray-600 font-normal">
             {totalMembers} personnes
           </span>
         </h2>

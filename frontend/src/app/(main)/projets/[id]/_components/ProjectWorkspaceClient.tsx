@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Project, Task } from "@/app/types";
 import ProjectHeader from "./ProjectHeader";
 import ProjectTasks from "./ProjectTasks";
 import ProjectEditModal from "./ProjectEditModal";
 import TaskCreateModal from "./TaskCreateModal";
+import AITaskModal from "./AITaskModal";
 
 interface ProjectWorkspaceClientProps {
   initialProject: Project;
@@ -30,18 +31,13 @@ export default function ProjectWorkspaceClient({
   currentUser,
 }: ProjectWorkspaceClientProps) {
   const router = useRouter();
-  const [project, setProject] = useState(initialProject);
-  const [tasks, setTasks] = useState(initialTasks);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isAIOpen, setIsAIOpen] = useState(false);
 
-  useEffect(() => {
-    setProject(initialProject);
-  }, [initialProject]);
-
-  useEffect(() => {
-    setTasks(initialTasks);
-  }, [initialTasks]);
+  // Use props directly instead of state to avoid cascading renders
+  const project = initialProject;
+  const tasks = initialTasks;
 
   const canEditProject = project.owner.id === currentUser.id;
   const collaborators: Collaborator[] = [
@@ -247,6 +243,7 @@ export default function ProjectWorkspaceClient({
         currentUserId={currentUser.id}
         onEditProject={() => setIsEditOpen(true)}
         onCreateTask={() => setIsCreateOpen(true)}
+        onAICreateTask={() => setIsAIOpen(true)}
       />
 
       <ProjectTasks
@@ -272,6 +269,14 @@ export default function ProjectWorkspaceClient({
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
         onSaved={handleCreateTask}
+      />
+
+      <AITaskModal
+        projectId={project.id}
+        collaborators={collaborators}
+        isOpen={isAIOpen}
+        onClose={() => setIsAIOpen(false)}
+        onTaskCreated={() => router.refresh()}
       />
     </>
   );

@@ -23,10 +23,11 @@ export default function CreateProjectButton({
   return (
     <button
       onClick={handleClick}
-      className="px-6 py-3 cursor-pointer bg-black text-white rounded-xl shadow-md hover:bg-gray-800 transition-colors"
+      className="px-3 sm:px-5 lg:px-6 py-2 lg:py-3 text-xs sm:text-sm lg:text-base cursor-pointer bg-black text-white rounded-lg sm:rounded-xl shadow-md hover:bg-gray-800 transition-colors"
       aria-label="Créer un nouveau projet"
     >
-      + Créer un projet
+      <span className="hidden sm:inline">+ Créer un projet</span>
+      <span className="sm:hidden">+ Projet</span>
     </button>
   );
 }

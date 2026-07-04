@@ -95,20 +95,23 @@ export default function TaskDetailModal({
       aria-modal="true"
       aria-labelledby="modal-title"
     >
-      <div className="flex items-center justify-center min-h-full p-4">
+      <div className="flex items-center justify-center min-h-full p-3 sm:p-4 lg:p-6">
         <div
-          className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col"
+          className="bg-white rounded-lg sm:rounded-2xl shadow-2xl max-w-[95vw] sm:max-w-lg lg:max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col"
           onClick={(e) => e.stopPropagation()}
         >
           {/* En-tête */}
-          <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-start justify-between shrink-0">
-            <div className="flex-1 pr-4">
-              <h2 id="modal-title" className="text-2xl font-bold text-gray-900">
+          <div className="bg-white border-b border-gray-200 px-4 py-3 sm:px-6 sm:py-4 flex items-start justify-between shrink-0">
+            <div className="flex-1 pr-2 sm:pr-4">
+              <h2
+                id="modal-title"
+                className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900"
+              >
                 {task.title}
               </h2>
-              <div className="flex items-center gap-3 mt-2">
+              <div className="flex items-center gap-2 sm:gap-3 mt-2">
                 <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(
+                  className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(
                     task.status,
                   )}`}
                 >
@@ -118,7 +121,7 @@ export default function TaskDetailModal({
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 cursor-pointer hover:text-gray-600 transition-colors p-2"
+              className="text-gray-600 cursor-pointer hover:text-gray-800 transition-colors p-2"
               aria-label="Fermer la modale"
             >
               <FontAwesomeIcon icon={faTimes} className="w-6 h-6" />
@@ -126,73 +129,87 @@ export default function TaskDetailModal({
           </div>
 
           {/* Contenu */}
-          <div className="px-6 py-6 space-y-6 overflow-y-auto flex-1">
+          <div className="px-4 py-4 sm:px-6 sm:py-6 space-y-4 sm:space-y-6 overflow-y-auto flex-1">
             {/* Description */}
             {task.description && (
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2">
                   Description
                 </h3>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
                   {task.description}
                 </p>
               </div>
             )}
 
             {/* Informations */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {/* Projet */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
                 <div className="flex items-center text-gray-600 mb-1">
                   <FontAwesomeIcon
                     icon={faFolderOpen}
-                    className="w-5 h-5 mr-2"
+                    className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
                   />
-                  <span className="font-semibold">Projet</span>
+                  <span className="font-semibold text-sm sm:text-base">
+                    Projet
+                  </span>
                 </div>
-                <p className="text-gray-900 ml-7">{task.project.name}</p>
+                <p className="text-sm sm:text-base text-gray-900 ml-6 sm:ml-7">
+                  {task.project.name}
+                </p>
                 {task.project.description && (
-                  <p className="text-gray-600 text-sm ml-7 mt-1">
+                  <p className="text-gray-600 text-xs sm:text-sm ml-6 sm:ml-7 mt-1">
                     {task.project.description}
                   </p>
                 )}
               </div>
 
               {/* Date d'échéance */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gray-50 rounded-lg p-3 sm:p-4">
                 <div className="flex items-center text-gray-600 mb-1">
-                  <FontAwesomeIcon icon={faClock} className="w-5 h-5 mr-2" />
-                  <span className="font-semibold">Date d&apos;échéance</span>
+                  <FontAwesomeIcon
+                    icon={faClock}
+                    className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                  />
+                  <span className="font-semibold text-sm sm:text-base">
+                    Date d&apos;échéance
+                  </span>
                 </div>
-                <p className="text-gray-900 ml-7">{formatDate(task.dueDate)}</p>
+                <p className="text-sm sm:text-base text-gray-900 ml-6 sm:ml-7">
+                  {formatDate(task.dueDate)}
+                </p>
               </div>
             </div>
 
             {/* Assignés */}
             {task.assignees && task.assignees.length > 0 && (
               <div>
-                <div className="flex items-center text-gray-600 mb-3">
-                  <FontAwesomeIcon icon={faUser} className="w-5 h-5 mr-2" />
-                  <h3 className="text-lg font-semibold text-gray-900">
+                <div className="flex items-center text-gray-600 mb-2 sm:mb-3">
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                  />
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                     Assignés ({task.assignees.length})
                   </h3>
                 </div>
-                <div className="space-y-2 ml-7">
+                <div className="space-y-2 ml-6 sm:ml-7">
                   {task.assignees.map((assignee) => (
                     <div
                       key={assignee.id}
-                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gray-50 rounded-lg"
                     >
-                      <div className="w-10 h-10 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
                         {assignee.user.name
                           ? assignee.user.name.charAt(0).toUpperCase()
                           : assignee.user.email.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">
+                        <p className="font-medium text-sm sm:text-base text-gray-900">
                           {assignee.user.name || "Sans nom"}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-600">
                           {assignee.user.email}
                         </p>
                       </div>
@@ -204,35 +221,38 @@ export default function TaskDetailModal({
 
             {/* Commentaires */}
             <div>
-              <div className="flex items-center text-gray-600 mb-3">
-                <FontAwesomeIcon icon={faMessage} className="w-5 h-5 mr-2" />
-                <h3 className="text-lg font-semibold text-gray-900">
+              <div className="flex items-center text-gray-600 mb-2 sm:mb-3">
+                <FontAwesomeIcon
+                  icon={faMessage}
+                  className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                />
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                   Commentaires ({task.comments?.length ?? 0})
                 </h3>
               </div>
               {task.comments && task.comments.length > 0 ? (
-                <div className="space-y-4 ml-7">
+                <div className="space-y-3 sm:space-y-4 ml-6 sm:ml-7">
                   {task.comments.map((comment) => (
                     <div
                       key={comment.id}
-                      className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500"
+                      className="bg-gray-50 rounded-lg p-3 sm:p-4 border-l-4 border-blue-500"
                     >
-                      <div className="flex items-start gap-3 mb-2">
-                        <div className="w-8 h-8 rounded-full bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-sm">
+                      <div className="flex items-start gap-2 sm:gap-3 mb-2">
+                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-xs sm:text-sm">
                           {comment.author.name
                             ? comment.author.name.charAt(0).toUpperCase()
                             : comment.author.email.charAt(0).toUpperCase()}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <p className="font-semibold text-gray-900">
+                            <p className="font-semibold text-sm sm:text-base text-gray-900">
                               {comment.author.name || comment.author.email}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-600">
                               {formatDateTime(comment.createdAt)}
                             </p>
                           </div>
-                          <p className="text-gray-700 mt-2">
+                          <p className="text-sm sm:text-base text-gray-700 mt-2">
                             {comment.content}
                           </p>
                         </div>
@@ -241,7 +261,9 @@ export default function TaskDetailModal({
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-500 italic ml-7">Aucun commentaire</p>
+                <p className="text-sm sm:text-base text-gray-600 italic ml-6 sm:ml-7">
+                  Aucun commentaire
+                </p>
               )}
             </div>
           </div>
