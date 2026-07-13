@@ -10,54 +10,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import type { Task } from "@/app/types";
 import { useEffect } from "react";
+import {
+  getStatusColor,
+  getStatusLabel,
+  formatDate,
+  formatDateTime,
+} from "@/lib/utils";
 
 interface TaskDetailModalProps {
   task: Task;
   isOpen: boolean;
   onClose: () => void;
-}
-
-// Fonction pour obtenir la couleur de statut
-function getStatusColor(status: string): string {
-  const colors: Record<string, string> = {
-    DONE: "bg-[#F1FFF7] text-[#27AE60]",
-    IN_PROGRESS: "bg-[#FFF0D7] text-[#E08D00]",
-    TODO: "bg-[#FFE0E0] text-[#EF4444]",
-  };
-  return colors[status] || "bg-gray-100 text-gray-800";
-}
-
-// Fonction pour obtenir le libellé du statut
-function getStatusLabel(status: string): string {
-  const labels: Record<string, string> = {
-    TODO: "À faire",
-    IN_PROGRESS: "En cours",
-    DONE: "Terminé",
-  };
-  return labels[status] || status;
-}
-
-// Fonction pour formater la date
-function formatDate(dateString?: string): string {
-  if (!dateString) return "Pas de date limite";
-  const date = new Date(dateString);
-  return date.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
-
-// Fonction pour formater la date et l'heure
-function formatDateTime(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 }
 
 export default function TaskDetailModal({
@@ -150,6 +113,7 @@ export default function TaskDetailModal({
                   <FontAwesomeIcon
                     icon={faFolderOpen}
                     className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                    aria-hidden="true"
                   />
                   <span className="font-semibold text-sm sm:text-base">
                     Projet
@@ -171,13 +135,16 @@ export default function TaskDetailModal({
                   <FontAwesomeIcon
                     icon={faClock}
                     className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                    aria-hidden="true"
                   />
                   <span className="font-semibold text-sm sm:text-base">
                     Date d&apos;échéance
                   </span>
                 </div>
                 <p className="text-sm sm:text-base text-gray-900 ml-6 sm:ml-7">
-                  {formatDate(task.dueDate)}
+                  <time dateTime={task.dueDate}>
+                    {formatDate(task.dueDate)}
+                  </time>
                 </p>
               </div>
             </div>
@@ -189,18 +156,26 @@ export default function TaskDetailModal({
                   <FontAwesomeIcon
                     icon={faUser}
                     className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                    aria-hidden="true"
                   />
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                     Assignés ({task.assignees.length})
                   </h3>
                 </div>
-                <div className="space-y-2 ml-6 sm:ml-7">
+                <ul
+                  className="space-y-2 ml-6 sm:ml-7"
+                  aria-label="Liste des personnes assignées à cette tâche"
+                >
                   {task.assignees.map((assignee) => (
-                    <div
+                    <li
                       key={assignee.id}
                       className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-gray-50 rounded-lg"
                     >
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+                      <div
+                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-semibold text-sm"
+                        role="img"
+                        aria-label={`Avatar de ${assignee.user.name || assignee.user.email}`}
+                      >
                         {assignee.user.name
                           ? assignee.user.name.charAt(0).toUpperCase()
                           : assignee.user.email.charAt(0).toUpperCase()}
@@ -213,9 +188,9 @@ export default function TaskDetailModal({
                           {assignee.user.email}
                         </p>
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             )}
 
@@ -225,20 +200,28 @@ export default function TaskDetailModal({
                 <FontAwesomeIcon
                   icon={faMessage}
                   className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
+                  aria-hidden="true"
                 />
                 <h3 className="text-base sm:text-lg font-semibold text-gray-900">
                   Commentaires ({task.comments?.length ?? 0})
                 </h3>
               </div>
               {task.comments && task.comments.length > 0 ? (
-                <div className="space-y-3 sm:space-y-4 ml-6 sm:ml-7">
+                <ul
+                  className="space-y-3 sm:space-y-4 ml-6 sm:ml-7"
+                  aria-label="Liste des commentaires"
+                >
                   {task.comments.map((comment) => (
-                    <div
+                    <li
                       key={comment.id}
                       className="bg-gray-50 rounded-lg p-3 sm:p-4 border-l-4 border-blue-500"
                     >
                       <div className="flex items-start gap-2 sm:gap-3 mb-2">
-                        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-xs sm:text-sm">
+                        <div
+                          className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-linear-to-br from-purple-400 to-purple-600 flex items-center justify-center text-white font-semibold text-xs sm:text-sm"
+                          role="img"
+                          aria-label={`Avatar de ${comment.author.name || comment.author.email}`}
+                        >
                           {comment.author.name
                             ? comment.author.name.charAt(0).toUpperCase()
                             : comment.author.email.charAt(0).toUpperCase()}
@@ -248,18 +231,21 @@ export default function TaskDetailModal({
                             <p className="font-semibold text-sm sm:text-base text-gray-900">
                               {comment.author.name || comment.author.email}
                             </p>
-                            <p className="text-xs text-gray-600">
+                            <time
+                              className="text-xs text-gray-600"
+                              dateTime={comment.createdAt}
+                            >
                               {formatDateTime(comment.createdAt)}
-                            </p>
+                            </time>
                           </div>
                           <p className="text-sm sm:text-base text-gray-700 mt-2">
                             {comment.content}
                           </p>
                         </div>
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               ) : (
                 <p className="text-sm sm:text-base text-gray-600 italic ml-6 sm:ml-7">
                   Aucun commentaire
@@ -272,7 +258,8 @@ export default function TaskDetailModal({
           <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex justify-end shrink-0">
             <button
               onClick={onClose}
-              className="px-6 py-2 cursor-pointer bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
+              className="px-6 py-2 cursor-pointer bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800"
+              aria-label="Fermer la fenêtre de détails"
             >
               Fermer
             </button>

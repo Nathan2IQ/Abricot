@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faPlus, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import type { Project } from "@/app/types";
 import Link from "next/link";
+import { getInitials } from "@/lib/utils";
 
 interface ProjectHeaderProps {
   project: Project;
@@ -11,15 +12,6 @@ interface ProjectHeaderProps {
   onEditProject: () => void;
   onCreateTask: () => void;
   onAICreateTask: () => void;
-}
-
-// Fonction pour obtenir les initiales (prénom + nom)
-function getInitials(name: string): string {
-  const words = name.trim().split(/\s+/);
-  if (words.length >= 2) {
-    return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
-  }
-  return words[0].charAt(0).toUpperCase();
 }
 
 export default function ProjectHeader({
@@ -39,11 +31,13 @@ export default function ProjectHeader({
         <div className="flex flex-col sm:flex-row w-full lg:w-auto">
           <Link
             href="/projets"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#FF6B35] transition-colors mb-3 sm:mb-0"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-[#FF6B35] transition-colors mb-3 sm:mb-0 focus:outline-none focus:ring-2 focus:ring-[#D3590B] focus:ring-offset-2 rounded-xl"
+            aria-label="Retour à la liste des projets"
           >
             <FontAwesomeIcon
               icon={faArrowLeft}
               className="w-3 h-3 sm:w-4 sm:h-4 border border-gray-300 bg-white rounded-xl p-3 sm:p-4"
+              aria-hidden="true"
             />
           </Link>
           <div className="sm:ml-4">
@@ -55,7 +49,7 @@ export default function ProjectHeader({
                 <button
                   type="button"
                   onClick={onEditProject}
-                  className="text-[#D3590B] text-xs sm:text-sm lg:text-base font-medium cursor-pointer underline self-start"
+                  className="text-[#BE4E09] text-xs sm:text-sm lg:text-base font-medium cursor-pointer underline self-start"
                 >
                   Modifier
                 </button>
@@ -75,12 +69,13 @@ export default function ProjectHeader({
             <button
               type="button"
               onClick={onCreateTask}
-              className="flex-1 lg:flex-none px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-xs sm:text-sm lg:text-base bg-black text-white cursor-pointer rounded-lg flex items-center justify-center gap-2"
-              aria-label="Créer une tâche"
+              className="flex-1 lg:flex-none px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-xs sm:text-sm lg:text-base bg-black text-white cursor-pointer rounded-lg flex items-center justify-center gap-2 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+              aria-label="Créer une nouvelle tâche"
             >
               <FontAwesomeIcon
                 icon={faPlus}
                 className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5"
+                aria-hidden="true"
               />
               <span className="hidden sm:inline">Créer une tâche</span>
               <span className="sm:hidden">Créer</span>
@@ -90,14 +85,15 @@ export default function ProjectHeader({
             <button
               type="button"
               onClick={onAICreateTask}
-              className="flex-1 lg:flex-none px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-xs sm:text-sm lg:text-base bg-[#D3590B] text-white cursor-pointer rounded-lg flex items-center justify-center gap-2 hover:bg-[#b94a09] transition-colors"
-              aria-label="Créer une tâche avec l'IA"
+              className="flex-1 lg:flex-none px-3 sm:px-4 lg:px-6 py-2 sm:py-3 text-xs sm:text-sm lg:text-base bg-[#C2510A] text-white cursor-pointer rounded-lg flex items-center justify-center gap-2 hover:bg-[#b94a09] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D3590B]"
+              aria-label="Créer une tâche avec l'intelligence artificielle"
             >
               <FontAwesomeIcon
                 icon={faStar}
                 className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5"
+                aria-hidden="true"
               />
-              IA
+              <span>IA</span>
             </button>
           )}
         </div>
@@ -112,11 +108,20 @@ export default function ProjectHeader({
           </span>
         </h2>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div
+          className="flex flex-wrap items-center gap-3"
+          role="list"
+          aria-label="Liste des contributeurs du projet"
+        >
           {/* Propriétaire */}
-          <div className="flex items-center gap-2 bg-gray-50 rounded-full pr-3 border border-gray-200">
+          <div
+            className="flex items-center gap-2 bg-gray-50 rounded-full pr-3 border border-gray-200"
+            role="listitem"
+          >
             <div
               className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center text-xs font-semibold"
+              role="img"
+              aria-label={`Avatar de ${project.owner.name || project.owner.email}, propriétaire`}
               title={project.owner.name || project.owner.email}
             >
               {getInitials(project.owner.name || project.owner.email)}
@@ -134,9 +139,12 @@ export default function ProjectHeader({
             <div
               key={member.id}
               className="flex items-center gap-2 bg-gray-50 rounded-full pr-3 border border-gray-200"
+              role="listitem"
             >
               <div
                 className="w-8 h-8 rounded-full bg-[#E5E7EB] flex items-center justify-center text-xs font-semibold"
+                role="img"
+                aria-label={`Avatar de ${member.user.name || member.user.email}`}
                 title={member.user.name || member.user.email}
               >
                 {getInitials(member.user.name || member.user.email)}

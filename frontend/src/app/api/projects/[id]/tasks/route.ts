@@ -31,12 +31,6 @@ export async function POST(
     const cookieStore = await cookies();
     const token = cookieStore.get("auth_token")?.value;
 
-    console.log("[API tasks POST] incoming", {
-      projectId: resolvedParams.id,
-      hasToken: Boolean(token),
-      body,
-    });
-
     if (!token) {
       return NextResponse.json(
         { success: false, message: "Non authentifié" },
@@ -74,11 +68,6 @@ export async function POST(
     const project = projectData.data?.project;
 
     if (!project || project.owner?.id !== user.id) {
-      console.log("[API tasks POST] denied: not owner", {
-        projectId: resolvedParams.id,
-        userId: user.id,
-        ownerId: project?.owner?.id,
-      });
       return NextResponse.json(
         { success: false, message: "Réservé au propriétaire du projet" },
         { status: 403 },
@@ -99,13 +88,6 @@ export async function POST(
 
     const data = await response.json().catch(() => null);
 
-    console.log("[API tasks POST] backend response", {
-      projectId: resolvedParams.id,
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
-
     if (!response.ok) {
       return NextResponse.json(
         data ?? { success: false, message: "Erreur lors de la création" },
@@ -115,10 +97,7 @@ export async function POST(
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    console.error("[API tasks POST] server error", {
-      projectId: resolvedParams.id,
-      error,
-    });
+    console.error("[API tasks POST] Error:", error);
     return NextResponse.json(
       { success: false, message: "Erreur serveur" },
       { status: 500 },

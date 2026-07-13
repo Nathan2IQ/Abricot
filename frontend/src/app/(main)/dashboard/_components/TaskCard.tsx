@@ -9,41 +9,11 @@ import {
 import type { Task } from "@/app/types";
 import { useState } from "react";
 import TaskDetailModal from "./TaskDetailModal";
+import { getStatusColor, getStatusLabel, formatDate } from "@/lib/utils";
 
 interface TaskCardProps {
   task: Task;
   variant?: "list" | "kanban";
-}
-
-// Fonction pour obtenir la couleur de statut
-function getStatusColor(status: string): string {
-  const colors: Record<string, string> = {
-    DONE: "bg-[#F1FFF7] text-[#27AE60]", // Vert clair pour DONE
-    IN_PROGRESS: "bg-[#FFF0D7] text-[#E08D00]", // Orange clair pour IN_PROGRESS
-    TODO: "bg-[#FFE0E0] text-[#EF4444]", // Rouge clair pour TODO
-  };
-  return colors[status] || "bg-gray-100 text-gray-800";
-}
-
-// Fonction pour obtenir le libellé du statut
-function getStatusLabel(status: string): string {
-  const labels: Record<string, string> = {
-    TODO: "À faire",
-    IN_PROGRESS: "En cours",
-    DONE: "Terminé",
-  };
-  return labels[status] || status;
-}
-
-// Fonction pour formater la date
-function formatDate(dateString?: string): string {
-  if (!dateString) return "Pas de date limite";
-  const date = new Date(dateString);
-  return date.toLocaleDateString("fr-FR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
 }
 
 export default function TaskCard({ task, variant = "list" }: TaskCardProps) {

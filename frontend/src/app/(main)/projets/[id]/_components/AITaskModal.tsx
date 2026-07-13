@@ -98,12 +98,6 @@ export default function AITaskModal({
     setIsGenerating(true);
     setErrorMessage("");
 
-    console.log("[AITaskModal] Generating tasks with:", {
-      prompt: prompt.trim(),
-      projectId,
-    });
-    console.log("[AITaskModal] Document cookies:", document.cookie);
-
     try {
       const response = await fetch("/api/ai/createTask?action=generate", {
         method: "POST",
@@ -117,31 +111,16 @@ export default function AITaskModal({
         }),
       });
 
-      console.log("[AITaskModal] Response received:", {
-        status: response.status,
-        statusText: response.statusText,
-        ok: response.ok,
-        headers: Object.fromEntries(response.headers.entries()),
-      });
-
-      // Clone the response so we can read it multiple times if needed
       const responseClone = response.clone();
 
       let data;
       try {
         data = await response.json();
       } catch (jsonError) {
-        console.error("[AITaskModal] Failed to parse JSON:", jsonError);
         const text = await responseClone.text();
-        console.error("[AITaskModal] Response text:", text);
+        console.error("[AITaskModal] Invalid JSON response:", text);
         throw new Error("Réponse invalide du serveur");
       }
-
-      console.log("[AITaskModal] Generate response:", {
-        status: response.status,
-        ok: response.ok,
-        data,
-      });
 
       if (!response.ok) {
         throw new Error(data.error || "Impossible de générer les tâches");
@@ -229,14 +208,7 @@ export default function AITaskModal({
     setStep("creating");
 
     try {
-      // Remove temporary IDs before sending
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const tasksToCreate = generatedTasks.map(({ id, ...task }) => task);
-
-      console.log("[AITaskModal] Creating tasks:", {
-        count: tasksToCreate.length,
-        projectId,
-      });
 
       const response = await fetch("/api/ai/createTask?action=create", {
         method: "POST",

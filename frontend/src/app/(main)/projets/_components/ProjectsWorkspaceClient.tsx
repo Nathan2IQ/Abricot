@@ -14,7 +14,6 @@ interface ProjectsWorkspaceClientProps {
 
 export default function ProjectsWorkspaceClient({
   initialProjects,
-  currentUser: _currentUser,
 }: ProjectsWorkspaceClientProps) {
   const router = useRouter();
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -24,8 +23,6 @@ export default function ProjectsWorkspaceClient({
     description?: string;
     contributors: string[];
   }) => {
-    console.log("[ProjectsWorkspaceClient] createProject request", payload);
-
     const response = await fetch("/api/projects", {
       method: "POST",
       headers: {
@@ -35,11 +32,6 @@ export default function ProjectsWorkspaceClient({
     });
 
     const data = await response.json().catch(() => null);
-    console.log("[ProjectsWorkspaceClient] createProject response", {
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
       throw new Error(data?.message || "Impossible de créer le projet");

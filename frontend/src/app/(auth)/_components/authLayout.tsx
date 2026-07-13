@@ -10,13 +10,13 @@ export default function AuthLayout({
       <div className="flex justify-center">
         <Image
           src="/Logo_Orange.png"
-          alt="Logo d'Abricot Orange"
+          alt="Abricot - Plateforme de gestion de projets et tâches"
           width={250}
           height={250}
           priority
         />
       </div>
-      <div className="w-full max-w-md">{children}</div>
+      <main className="w-full max-w-md">{children}</main>
       <div></div>
     </div>
   );

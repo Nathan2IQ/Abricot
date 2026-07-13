@@ -8,7 +8,7 @@ interface TaskListProps {
 export default function TaskList({ tasks }: TaskListProps) {
   if (tasks.length === 0) {
     return (
-      <div className="bg-gray-50 border border-gray-200 text-gray-600 px-6 py-8 rounded-xl text-center">
+      <div className="bg-gray-50 border border-gray-200 text-gray-600 m-t-30 px-6 py-8 rounded-xl text-center">
         Aucune tâche assignée pour le moment
       </div>
     );

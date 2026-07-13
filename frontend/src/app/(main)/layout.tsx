@@ -10,25 +10,7 @@ import {
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "@/app/context/AuthContext";
-
-// Fonction pour extraire les initiales
-function getInitials(user: { name?: string; email: string } | null): string {
-  if (!user) return "??";
-
-  // Si l'utilisateur a un nom, utiliser les initiales du nom
-  if (user.name) {
-    const names = user.name.trim().split(" ");
-    if (names.length >= 2) {
-      // Prénom + Nom
-      return (names[0][0] + names[names.length - 1][0]).toUpperCase();
-    }
-    // Un seul nom
-    return names[0].substring(0, 2).toUpperCase();
-  }
-
-  // Sinon, utiliser les 2 premières lettres de l'email
-  return user.email.substring(0, 2).toUpperCase();
-}
+import { getInitials } from "@/lib/utils";
 
 export default function MainLayout({
   children,
@@ -38,20 +20,24 @@ export default function MainLayout({
   const { user, logout } = useAuth();
   const pathname = usePathname();
 
-  // Fonction pour déterminer si le lien est actif
   const isActive = (path: string) => pathname.startsWith(path);
 
   return (
     <>
       <header className="bg-white flex items-center justify-between p-2 sm:p-3 w-full px-4 sm:px-6 lg:px-10">
         <div className="shrink-0">
-          <Link href="/dashboard" className="flex items-center">
+          <Link
+            href="/dashboard"
+            className="flex items-center"
+            aria-label="Retour au tableau de bord"
+          >
             <Image
               src="/Logo_Orange.png"
-              alt="Logo Abricot"
+              alt="Abricot - Gestion de projets"
               width={140}
               height={50}
               className="object-contain w-20 sm:w-28 lg:w-35 h-auto"
+              priority
             />
           </Link>
         </div>
@@ -61,10 +47,10 @@ export default function MainLayout({
         >
           <Link
             href="/dashboard"
-            className={`text-[#D3590B] flex items-center rounded-2xl font-medium px-2 py-2 sm:px-3 lg:px-5 lg:py-3 text-sm lg:text-base focus:outline-none focus:text-white focus:bg-black ${
+            className={`text-[#BE4E09] flex items-center rounded-2xl font-medium px-2 py-2 sm:px-3 lg:px-5 lg:py-3 text-sm lg:text-base focus:outline-none focus:text-white focus:bg-black ${
               isActive("/dashboard")
                 ? "text-white bg-black"
-                : "text-[#D3590B] hover:bg-gray-100"
+                : "text-[#BE4E09] hover:bg-gray-100"
             }`}
             aria-current={isActive("/dashboard") ? "page" : undefined}
           >
@@ -81,10 +67,10 @@ export default function MainLayout({
 
           <Link
             href="/projets"
-            className={`text-[#D3590B] flex items-center rounded-2xl font-medium px-2 py-2 sm:px-3 lg:px-5 lg:py-3 text-sm lg:text-base focus:outline-none focus:text-white focus:bg-black ${
+            className={`text-[#BE4E09] flex items-center rounded-2xl font-medium px-2 py-2 sm:px-3 lg:px-5 lg:py-3 text-sm lg:text-base focus:outline-none focus:text-white focus:bg-black ${
               isActive("/projets")
                 ? "text-white bg-black"
-                : "text-[#D3590B] hover:bg-gray-100"
+                : "text-[#BE4E09] hover:bg-gray-100"
             }`}
             aria-current={isActive("/projets") ? "page" : undefined}
           >
@@ -104,7 +90,7 @@ export default function MainLayout({
             className="text-black bg-[#FFE8D9] rounded-full font-medium p-3 lg:p-4 hover:bg-[#FFD4B8] transition-colors text-sm lg:text-base"
             aria-label={`Profil de ${user?.name || user?.email}`}
           >
-            {getInitials(user)}
+            {getInitials(user?.name || user?.email || "")}
           </Link>
         </div>
       </header>
@@ -115,7 +101,7 @@ export default function MainLayout({
         <div className="shrink-0 order-2 sm:order-1">
           <Image
             src="/Logo_Noir.png"
-            alt="Logo Abricot"
+            alt="Abricot"
             width={140}
             height={50}
             className="object-contain w-20 sm:w-28 lg:w-35 h-auto"
@@ -124,7 +110,7 @@ export default function MainLayout({
         <div className="order-1 sm:order-2">
           <button
             onClick={logout}
-            className="flex cursor-pointer items-center gap-2 text-[#D3590B] hover:text-white hover:bg-[#D3590B] font-medium px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm lg:text-base"
+            className="flex cursor-pointer items-center gap-2 text-[#BE4E09] hover:text-white hover:bg-[#BE4E09] font-medium px-3 sm:px-4 py-2 rounded-lg transition-colors text-sm lg:text-base"
             aria-label="Se déconnecter"
           >
             <FontAwesomeIcon

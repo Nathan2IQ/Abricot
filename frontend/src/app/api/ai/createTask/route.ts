@@ -2,7 +2,6 @@ import { Mistral } from "@mistralai/mistralai";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-// Initialize Mistral client
 const client = new Mistral({
   apiKey: process.env.MISTRAL_API_KEY,
 });
@@ -28,36 +27,17 @@ interface CreateRequestBody {
   projectId: string;
 }
 
-/**
- * POST /api/ai/createTask?action=generate
- * Generate tasks using Mistral AI without creating them
- *
- * POST /api/ai/createTask?action=create
- * Create multiple tasks in the backend
- */
 export async function POST(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get("action") || "generate";
 
-    console.log("[AI Route] POST request:", { action });
-
-    // Get auth token from cookies
     const cookieStore = await cookies();
     const token = cookieStore.get("auth_token")?.value;
 
-    console.log("[AI Route] Cookie store:", {
-      hasToken: !!token,
-      tokenLength: token?.length,
-      allCookies: Array.from(cookieStore.getAll().map((c) => c.name)),
-    });
-
     if (!token) {
-      console.error("[AI Route] No token found in cookies");
       return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
     }
-
-    console.log("[AI Route] Token validated, proceeding with action:", action);
 
     if (action === "generate") {
       return handleGenerate(request);
@@ -80,21 +60,19 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Generate tasks from user prompt using Mistral AI
+ * Génère des tâches depuis un prompt utilisateur via Mistral AI.
+ * Cette fonction effectue :
+ * 1. Validation des paramètres d'entrée
+ * 2. Appel à l'API Mistral avec un prompt système structuré
+ * 3. Extraction et nettoyage de la réponse JSON (gestion des markdown code blocks)
+ * 4. Validation et normalisation des données (priorités, dates)
  */
 async function handleGenerate(request: NextRequest) {
   try {
-    console.log("[AI Route] handleGenerate called");
     const body: GenerateRequestBody = await request.json();
     const { prompt, projectId } = body;
 
-    console.log("[AI Route] handleGenerate params:", {
-      promptLength: prompt?.length,
-      projectId,
-    });
-
     if (!prompt || typeof prompt !== "string") {
-      console.error("[AI Route] Invalid prompt:", prompt);
       return NextResponse.json(
         { error: "Le prompt est requis" },
         { status: 400 },
@@ -102,19 +80,13 @@ async function handleGenerate(request: NextRequest) {
     }
 
     if (!projectId || typeof projectId !== "string") {
-      console.error("[AI Route] Invalid projectId:", projectId);
       return NextResponse.json(
         { error: "L'ID du projet est requis" },
         { status: 400 },
       );
     }
 
-    // Call Mistral AI agent (agent is already configured in AI Studio)
-    console.log("[AI] Calling Mistral agent with prompt:", prompt);
-    console.log("[AI] Using agent ID:", AGENT_ID);
-    console.log("[AI] API key present:", !!process.env.MISTRAL_API_KEY);
-
-    // Construct a detailed prompt to ensure JSON output
+    // Construire un prompt système détaillé pour forcer le format JSON
     const systemPrompt = `Tu es un assistant de gestion de projet. Ton rôle est d'analyser les demandes de l'utilisateur et de générer des tâches au format JSON strictement.
 
 IMPORTANT : Tu dois TOUJOURS répondre UNIQUEMENT avec un tableau JSON valide, sans texte supplémentaire, sans markdown, sans explication.
@@ -137,6 +109,7 @@ Règles :
 
 Demande de l'utilisateur : ${prompt}`;
 
+    // Appel à l'API Mistral
     const response = await client.beta.conversations.start({
       agentId: AGENT_ID,
       agentVersion: 0,
@@ -148,18 +121,14 @@ Demande de l'utilisateur : ${prompt}`;
       ],
     });
 
-    console.log("[AI] Mistral response:", JSON.stringify(response, null, 2));
-
-    // Extract the AI response from the conversation
+    // Extraire la réponse textuelle de l'agent
     let aiResponse = "";
 
-    // The response structure contains the agent's outputs
     if (
       response.outputs &&
       Array.isArray(response.outputs) &&
       response.outputs.length > 0
     ) {
-      // Get the last output message
       const lastOutput = response.outputs[response.outputs.length - 1];
       if (
         lastOutput &&
@@ -171,20 +140,18 @@ Demande de l'utilisateur : ${prompt}`;
     }
 
     if (!aiResponse) {
-      console.error("[AI] Unable to extract response from:", response);
       return NextResponse.json(
         { error: "Aucune réponse de l'agent" },
         { status: 500 },
       );
     }
 
-    console.log("[AI] Extracted response:", aiResponse);
-
-    // Parse JSON from AI response
-    // Clean the response (remove markdown code blocks if present)
+    /**
+     * Nettoyage de la réponse : l'IA peut retourner du JSON enveloppé dans des code blocks markdown
+     * On essaie de supprimer ces délimiteurs (```json ... ``` ou ``` ... ```)
+     */
     let cleanedResponse = aiResponse.trim();
 
-    // Try to extract JSON from markdown code blocks
     if (cleanedResponse.startsWith("```json")) {
       cleanedResponse = cleanedResponse
         .replace(/```json\n?/g, "")
@@ -193,7 +160,12 @@ Demande de l'utilisateur : ${prompt}`;
       cleanedResponse = cleanedResponse.replace(/```\n?/g, "");
     }
 
-    // Try to find JSON array or object in the response
+    /**
+     * Extraction du JSON avec regex :
+     * - Cherche d'abord un tableau JSON complet [...]
+     * - Sinon cherche un objet JSON {...} et on le transformera en tableau
+     * Ceci permet de gérer les cas où l'IA retourne du texte avant/après le JSON
+     */
     const jsonArrayMatch = cleanedResponse.match(/\[[\s\S]*\]/);
     const jsonObjectMatch = cleanedResponse.match(/\{[\s\S]*\}/);
 
@@ -203,16 +175,13 @@ Demande de l'utilisateur : ${prompt}`;
       cleanedResponse = jsonObjectMatch[0];
     }
 
-    console.log("[AI] Cleaned response for parsing:", cleanedResponse);
-
     let tasksData: TaskData | TaskData[];
     try {
       const parsed = JSON.parse(cleanedResponse);
-      // Support both single task and array of tasks
+      // Normaliser en tableau : l'IA peut retourner un seul objet ou un tableau
       tasksData = Array.isArray(parsed) ? parsed : [parsed];
-    } catch (parseError) {
-      console.error("[AI] JSON parse error:", parseError);
-      console.error("[AI] Response was:", cleanedResponse);
+    } catch {
+      console.error("[AI] JSON parse error:", cleanedResponse);
       return NextResponse.json(
         {
           error: "Impossible de parser la réponse de l'IA",
@@ -223,7 +192,13 @@ Demande de l'utilisateur : ${prompt}`;
       );
     }
 
-    // Validate and normalize tasks
+    /**
+     * Validation et normalisation des tâches générées :
+     * - Filtre les tâches sans titre (invalides)
+     * - Valide les priorités (LOW, MEDIUM, HIGH, URGENT) avec fallback sur MEDIUM
+     * - Nettoie les espaces superflus dans les chaînes
+     * - Assure la présence de tous les champs obligatoires
+     */
     const validPriorities = ["LOW", "MEDIUM", "HIGH", "URGENT"];
     const validatedTasks = (Array.isArray(tasksData) ? tasksData : [tasksData])
       .filter((task) => task.title && typeof task.title === "string")
@@ -238,16 +213,12 @@ Demande de l'utilisateur : ${prompt}`;
       }));
 
     if (validatedTasks.length === 0) {
-      console.error("[AI] No valid tasks generated");
       return NextResponse.json(
         { error: "L'IA n'a pas généré de tâches valides" },
         { status: 500 },
       );
     }
 
-    console.log("[AI] Generated tasks:", validatedTasks);
-
-    // Return generated tasks for user review
     return NextResponse.json({
       success: true,
       tasks: validatedTasks,
@@ -255,10 +226,6 @@ Demande de l'utilisateur : ${prompt}`;
     });
   } catch (error) {
     console.error("[AI] handleGenerate error:", error);
-    console.error(
-      "[AI] Error stack:",
-      error instanceof Error ? error.stack : undefined,
-    );
     return NextResponse.json(
       {
         error:
@@ -269,21 +236,13 @@ Demande de l'utilisateur : ${prompt}`;
     );
   }
 }
+
 /**
- * Create multiple tasks in the backend
+ * Crée plusieurs tâches dans le backend
  */
 async function handleCreate(request: NextRequest, token: string) {
-  console.log(
-    "[AI Route] handleCreate called with token length:",
-    token?.length,
-  );
   const body: CreateRequestBody = await request.json();
   const { tasks, projectId } = body;
-
-  console.log("[AI Route] handleCreate params:", {
-    tasksCount: tasks?.length,
-    projectId,
-  });
 
   if (!tasks || !Array.isArray(tasks) || tasks.length === 0) {
     return NextResponse.json(
@@ -299,12 +258,8 @@ async function handleCreate(request: NextRequest, token: string) {
     );
   }
 
-  // Get backend URL from environment or use default
   const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-  console.log("[AI] Creating tasks:", tasks);
-
-  // Create all tasks
   const results = await Promise.allSettled(
     tasks.map(async (task) => {
       const response = await fetch(
@@ -328,11 +283,8 @@ async function handleCreate(request: NextRequest, token: string) {
     }),
   );
 
-  // Count successes and failures
   const succeeded = results.filter((r) => r.status === "fulfilled").length;
   const failed = results.filter((r) => r.status === "rejected").length;
-
-  console.log("[AI] Tasks created:", { succeeded, failed });
 
   if (failed > 0) {
     return NextResponse.json({

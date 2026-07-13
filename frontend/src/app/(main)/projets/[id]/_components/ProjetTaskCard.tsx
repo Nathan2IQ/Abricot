@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import type { Task } from "@/app/types";
 import TaskEditModal from "./TaskEditModal";
+import { getInitials, getStatusBadge } from "@/lib/utils";
 
 interface ProjetTaskCardProps {
   task: Task;
@@ -30,17 +31,7 @@ interface ProjetTaskCardProps {
   onAddComment: (taskId: string, content: string) => Promise<void>;
 }
 
-// Fonction pour obtenir les initiales d'un nom
-function getInitials(name: string | null): string {
-  if (!name) return "?";
-  const parts = name.trim().split(/\s+/);
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[1][0]).toUpperCase();
-  }
-  return parts[0][0].toUpperCase();
-}
-
-// Fonction pour formater la date
+// Fonction pour formater la date (format court : "25 janvier")
 function formatDate(dateString: string | undefined): string {
   if (!dateString) return "Pas d'échéance";
   const date = new Date(dateString);
@@ -49,30 +40,6 @@ function formatDate(dateString: string | undefined): string {
     month: "long",
   };
   return date.toLocaleDateString("fr-FR", options);
-}
-
-// Fonction pour obtenir le style du badge de statut
-function getStatusBadge(status: Task["status"]): {
-  label: string;
-  className: string;
-} {
-  switch (status) {
-    case "TODO":
-      return {
-        label: "À faire",
-        className: "bg-red-100 text-red-700",
-      };
-    case "IN_PROGRESS":
-      return {
-        label: "En cours",
-        className: "bg-[#FFF0D7] text-[#C67500]",
-      };
-    case "DONE":
-      return {
-        label: "Terminé",
-        className: "bg-green-100 text-green-700",
-      };
-  }
 }
 
 export default function ProjetTaskCard({
@@ -139,12 +106,15 @@ export default function ProjetTaskCard({
           <div className="relative shrink-0" ref={menuRef}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-2 sm:p-3 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors"
-              aria-label="Actions de la tâche"
+              className="p-2 sm:p-3 hover:bg-gray-100 rounded-lg border border-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-[#D3590B] focus:ring-offset-2"
+              aria-label="Menu d'actions de la tâche"
+              aria-expanded={menuOpen}
+              aria-haspopup="menu"
             >
               <FontAwesomeIcon
                 icon={faEllipsisV}
                 className="w-3 h-3 sm:w-4 sm:h-4 cursor-pointer text-gray-600"
+                aria-hidden="true"
               />
             </button>
 
@@ -191,7 +161,7 @@ export default function ProjetTaskCard({
                 className="inline-flex items-center gap-2 px-3 py-1  rounded-full"
               >
                 <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300 text-gray-700 text-xs font-semibold">
-                  {getInitials(assignee.user.name)}
+                  {getInitials(assignee.user.name || assignee.user.email)}
                 </span>
                 <span className="text-sm bg-[#E5E7EB] py-1 px-2 rounded-xl text-gray-700">
                   {assignee.user.name || assignee.user.email}
@@ -284,7 +254,7 @@ export default function ProjetTaskCard({
                 >
                   <div className="flex items-center gap-2 mb-1">
                     <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-300 text-gray-700 text-xs font-semibold">
-                      {getInitials(comment.author.name)}
+                      {getInitials(comment.author.name || comment.author.email)}
                     </span>
                     <span className="text-sm font-medium text-gray-900">
                       {comment.author.name || comment.author.email}

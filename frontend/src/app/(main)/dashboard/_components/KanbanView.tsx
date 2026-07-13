@@ -42,11 +42,16 @@ export default function KanbanView({ tasks }: KanbanViewProps) {
               {/* En-tête de colonne */}
               <div
                 className={`${column.color} px-3 py-2 sm:px-4 sm:py-3 lg:px-6 lg:py-4 flex rounded-t-xl lg:rounded-t-2xl items-center gap-2 sm:gap-3 lg:gap-4`}
+                role="heading"
+                aria-level={3}
               >
                 <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-900">
                   {column.title}
                 </h3>
-                <span className="bg-[#E5E7EB] border border-transparent rounded-full px-2 sm:px-3 lg:px-4 py-0.5 sm:py-1 text-xs sm:text-sm font-medium text-gray-700">
+                <span
+                  className="bg-[#E5E7EB] border border-transparent rounded-full px-2 sm:px-3 lg:px-4 py-0.5 sm:py-1 text-xs sm:text-sm font-medium text-gray-700"
+                  aria-label={`${columnTasks.length} tâches`}
+                >
                   {columnTasks.length}
                 </span>
               </div>
@@ -54,10 +59,14 @@ export default function KanbanView({ tasks }: KanbanViewProps) {
               {/* Contenu de la colonne */}
               <div
                 className={`${column.color} p-2 sm:p-3 lg:p-4 flex-1 rounded-b-xl lg:rounded-b-2xl min-h-75 sm:min-h-100 lg:min-h-125 space-y-3 sm:space-y-4`}
+                role="list"
+                aria-label={`Tâches ${column.title.toLowerCase()}`}
               >
                 {columnTasks.length > 0 ? (
                   columnTasks.map((task) => (
-                    <TaskCard key={task.id} task={task} variant="kanban" />
+                    <div key={task.id} role="listitem">
+                      <TaskCard task={task} variant="kanban" />
+                    </div>
                   ))
                 ) : (
                   <div className="flex items-center justify-center h-32 text-gray-600 italic">

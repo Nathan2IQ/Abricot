@@ -14,7 +14,7 @@ export const generateToken = (userId: string, email: string): string => {
   };
 
   const secret = process.env.JWT_SECRET;
-  const expiresIn = process.env.JWT_EXPIRES_IN || "7d";
+  const expiresIn = process.env.JWT_EXPIRES_IN || "12h"; // Durée d'expiration par défaut de 12 heures
 
   if (!secret) {
     throw new Error("JWT_SECRET is not defined in environment variables");
@@ -56,7 +56,7 @@ export const verifyToken = (token: string): JwtPayload => {
  * @returns Le token extrait ou null
  */
 export const extractTokenFromHeader = (
-  authHeader: string | undefined
+  authHeader: string | undefined,
 ): string | null => {
   if (!authHeader) {
     return null;

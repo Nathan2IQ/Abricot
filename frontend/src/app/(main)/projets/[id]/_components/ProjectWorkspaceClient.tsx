@@ -60,11 +60,6 @@ export default function ProjectWorkspaceClient({
     dueDate?: string;
     assigneeIds: string[];
   }) => {
-    console.log("[ProjectWorkspaceClient] createTask request", {
-      projectId: project.id,
-      payload,
-    });
-
     const response = await fetch(`/api/projects/${project.id}/tasks`, {
       method: "POST",
       headers: {
@@ -74,11 +69,6 @@ export default function ProjectWorkspaceClient({
     });
 
     const data = await response.json().catch(() => null);
-    console.log("[ProjectWorkspaceClient] createTask response", {
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
       throw new Error(data?.message || "Impossible de créer la tâche");
@@ -97,12 +87,6 @@ export default function ProjectWorkspaceClient({
       assigneeIds: string[];
     },
   ) => {
-    console.log("[ProjectWorkspaceClient] updateTask request", {
-      projectId: project.id,
-      taskId,
-      payload,
-    });
-
     const response = await fetch(
       `/api/projects/${project.id}/tasks/${taskId}`,
       {
@@ -115,11 +99,6 @@ export default function ProjectWorkspaceClient({
     );
 
     const data = await response.json().catch(() => null);
-    console.log("[ProjectWorkspaceClient] updateTask response", {
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
       throw new Error(data?.message || "Impossible de mettre à jour la tâche");
@@ -129,11 +108,6 @@ export default function ProjectWorkspaceClient({
   };
 
   const handleDeleteTask = async (taskId: string) => {
-    console.log("[ProjectWorkspaceClient] deleteTask request", {
-      projectId: project.id,
-      taskId,
-    });
-
     const response = await fetch(
       `/api/projects/${project.id}/tasks/${taskId}`,
       {
@@ -142,11 +116,6 @@ export default function ProjectWorkspaceClient({
     );
 
     const data = await response.json().catch(() => null);
-    console.log("[ProjectWorkspaceClient] deleteTask response", {
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
       throw new Error(data?.message || "Impossible de supprimer la tâche");
@@ -156,12 +125,6 @@ export default function ProjectWorkspaceClient({
   };
 
   const handleAddComment = async (taskId: string, content: string) => {
-    console.log("[ProjectWorkspaceClient] createComment request", {
-      projectId: project.id,
-      taskId,
-      content,
-    });
-
     const response = await fetch(
       `/api/projects/${project.id}/tasks/${taskId}/comments`,
       {
@@ -174,32 +137,9 @@ export default function ProjectWorkspaceClient({
     );
 
     const data = await response.json().catch(() => null);
-    console.log("[ProjectWorkspaceClient] createComment response", {
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
-      const debugText =
-        data?.proxyDebugText ||
-        (data?.proxyDebug
-          ? JSON.stringify(data.proxyDebug)
-          : "Aucun contexte proxy");
-
-      console.error(
-        "[ProjectWorkspaceClient] createComment forbidden context",
-        {
-          status: response.status,
-          message: data?.message,
-          error: data?.error,
-          proxyDebug: data?.proxyDebug,
-          proxyDebugText: debugText,
-        },
-      );
-      throw new Error(
-        `${data?.message || "Impossible d'ajouter le commentaire"} (${debugText})`,
-      );
+      throw new Error(data?.message || "Impossible d'ajouter le commentaire");
     }
 
     router.refresh();
@@ -209,11 +149,6 @@ export default function ProjectWorkspaceClient({
     name: string;
     description?: string;
   }) => {
-    console.log("[ProjectWorkspaceClient] updateProject request", {
-      projectId: project.id,
-      payload,
-    });
-
     const response = await fetch(`/api/projects/${project.id}`, {
       method: "PUT",
       headers: {
@@ -223,11 +158,6 @@ export default function ProjectWorkspaceClient({
     });
 
     const data = await response.json().catch(() => null);
-    console.log("[ProjectWorkspaceClient] updateProject response", {
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
       throw new Error(data?.message || "Impossible de mettre à jour le projet");

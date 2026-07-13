@@ -11,7 +11,6 @@ interface DashboardHeaderProps {
 }
 
 export default function DashboardHeader({
-  userId,
   userName,
   userEmail,
 }: DashboardHeaderProps) {
@@ -23,8 +22,6 @@ export default function DashboardHeader({
     description?: string;
     contributors: string[];
   }) => {
-    console.log("[DashboardHeader] createProject request", payload);
-
     const response = await fetch("/api/projects", {
       method: "POST",
       headers: {
@@ -34,11 +31,6 @@ export default function DashboardHeader({
     });
 
     const data = await response.json().catch(() => null);
-    console.log("[DashboardHeader] createProject response", {
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
       throw new Error(data?.message || "Impossible de créer le projet");

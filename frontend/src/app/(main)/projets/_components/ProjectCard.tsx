@@ -4,20 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import type { Project } from "@/app/types";
 import Link from "next/link";
+import { getInitials } from "@/lib/utils";
 
 interface ProjectCardProps {
   project: Project;
-}
-
-// Fonction pour obtenir les initiales (prénom + nom)
-function getInitials(name: string): string {
-  const words = name.trim().split(/\s+/);
-  if (words.length >= 2) {
-    // Si on a au moins 2 mots, prendre première lettre de chacun des 2 premiers
-    return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
-  }
-  // Sinon, juste la première lettre
-  return words[0].charAt(0).toUpperCase();
 }
 
 export default function ProjectCard({ project }: ProjectCardProps) {
@@ -28,18 +18,21 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   const membersCount = project.members.length + 1; // +1 pour le propriétaire
 
   return (
-    <Link href={`/projets/${project.id}`}>
+    <Link
+      href={`/projets/${project.id}`}
+      aria-label={`Voir le projet ${project.name}`}
+    >
       <article className="bg-white border min-h-85 border-gray-200 rounded-xl p-4 sm:p-5 lg:p-6 shadow-sm hover:shadow-md transition-all cursor-pointer flex flex-col">
         {/* En-tête avec nom */}
         <div className="mb-3">
-          <h3 className="text-base sm:text-lg lg:text-xl font-semibold break-words">
+          <h3 className="text-base sm:text-lg lg:text-xl font-semibold wrap-break-word">
             {project.name}
           </h3>
         </div>
 
         {/* Description */}
         {project.description && (
-          <p className="text-gray-600 text-sm lg:text-base mb-4 line-clamp-2 break-words">
+          <p className="text-gray-600 text-sm lg:text-base mb-4 line-clamp-2 wrap-break-word">
             {project.description}
           </p>
         )}
@@ -48,9 +41,21 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="mb-4">
           <div className="flex items-center justify-between mb-2 text-sm">
             <span className="text-gray-600">Progression</span>
-            <span className="font-semibold text-gray-900">{progress}%</span>
+            <span
+              className="font-semibold text-gray-900"
+              aria-label={`${progress} pourcent complété`}
+            >
+              {progress}%
+            </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+          <div
+            className="w-full bg-gray-200 rounded-full h-2 overflow-hidden"
+            role="progressbar"
+            aria-valuenow={progress}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`Progression du projet: ${progress}%`}
+          >
             <div
               className="bg-blue-500 h-full transition-all duration-300"
               style={{ width: `${progress}%` }}
@@ -67,7 +72,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="pt-4 space-y-3 mt-auto">
           {/* En-tête Équipe */}
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <FontAwesomeIcon icon={faUsers} className="w-4 h-4" />
+            <FontAwesomeIcon
+              icon={faUsers}
+              className="w-4 h-4"
+              aria-hidden="true"
+            />
             <span>Équipe ({membersCount})</span>
           </div>
 
@@ -77,6 +86,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
             <div className="flex items-center gap-2">
               <div
                 className="w-8 h-8 rounded-full bg-orange-100 border-2 border-white flex items-center justify-center text-xs font-semibold"
+                role="img"
+                aria-label={`Avatar de ${project.owner.name || project.owner.email}, propriétaire du projet`}
                 title={project.owner.name || project.owner.email}
               >
                 {getInitials(project.owner.name || project.owner.email)}
@@ -88,11 +99,17 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
             {/* Autres membres */}
             {project.members.length > 0 && (
-              <div className="flex -space-x-2">
+              <div
+                className="flex -space-x-2"
+                role="list"
+                aria-label="Membres du projet"
+              >
                 {/* Avatars des membres (max 3) */}
                 {project.members.slice(0, 3).map((member) => (
                   <div
                     key={member.id}
+                    role="img"
+                    aria-label={`Avatar de ${member.user.name || member.user.email}`}
                     className="w-8 h-8 rounded-full bg-[#E5E7EB] border-2 border-white flex items-center justify-center text-xs font-semibold"
                     title={member.user.name || member.user.email}
                   >
@@ -102,6 +119,8 @@ export default function ProjectCard({ project }: ProjectCardProps) {
                 {/* Indicateur s'il y a plus de membres */}
                 {project.members.length > 3 && (
                   <div
+                    role="img"
+                    aria-label={`${project.members.length - 3} autres membres`}
                     className="w-8 h-8 rounded-full bg-[#E5E7EB] border-2 border-white flex items-center justify-center text-white text-xs font-semibold"
                     title={`+${project.members.length - 3} autres membres`}
                   >

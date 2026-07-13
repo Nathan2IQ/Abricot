@@ -31,12 +31,6 @@ export async function PUT(
     const cookieStore = await cookies();
     const token = cookieStore.get("auth_token")?.value;
 
-    console.log("[API project PUT] incoming", {
-      projectId: resolvedParams.id,
-      hasToken: Boolean(token),
-      body,
-    });
-
     if (!token) {
       return NextResponse.json(
         { success: false, message: "Non authentifié" },
@@ -74,11 +68,6 @@ export async function PUT(
     const project = projectData.data?.project;
 
     if (!project || project.owner?.id !== user.id) {
-      console.log("[API project PUT] denied: not owner", {
-        projectId: resolvedParams.id,
-        userId: user.id,
-        ownerId: project?.owner?.id,
-      });
       return NextResponse.json(
         { success: false, message: "Réservé au propriétaire du projet" },
         { status: 403 },
@@ -99,23 +88,13 @@ export async function PUT(
 
     const data = await response.json();
 
-    console.log("[API project PUT] backend response", {
-      projectId: resolvedParams.id,
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
-
     if (!response.ok) {
       return NextResponse.json(data, { status: response.status });
     }
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("[API project PUT] server error", {
-      projectId: resolvedParams.id,
-      error,
-    });
+    console.error("[API project PUT] Error:", error);
     return NextResponse.json(
       { success: false, message: "Erreur serveur" },
       { status: 500 },

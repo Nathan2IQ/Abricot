@@ -88,8 +88,8 @@ export default function ProjectTasks({
               onClick={() => setViewMode("list")}
               className={`flex-1 sm:flex-none px-3 sm:px-5 lg:px-6 py-2 sm:py-3 rounded-md cursor-pointer flex items-center justify-center gap-2 text-xs sm:text-sm lg:text-base transition-colors ${
                 viewMode === "list"
-                  ? "bg-[#FFE8D9] text-[#D3590B]"
-                  : "text-[#D3590B]"
+                  ? "bg-[#FFF4F0] text-[#BD4F0A]"
+                  : "text-[#BD4F0A]"
               }`}
             >
               <FontAwesomeIcon
@@ -102,8 +102,8 @@ export default function ProjectTasks({
               onClick={() => setViewMode("kanban")}
               className={`flex-1 sm:flex-none px-3 sm:px-5 lg:px-6 py-2 sm:py-3 rounded-md cursor-pointer flex items-center justify-center gap-2 text-xs sm:text-sm lg:text-base transition-colors ${
                 viewMode === "kanban"
-                  ? "bg-[#FFE8D9] text-[#D3590B]"
-                  : "text-[#D3590B]"
+                  ? "bg-[#FFF4F0] text-[#BD4F0A]"
+                  : "text-[#BD4F0A]"
               }`}
             >
               <FontAwesomeIcon

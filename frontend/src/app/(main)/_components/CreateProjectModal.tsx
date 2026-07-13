@@ -106,10 +106,14 @@ export default function CreateProjectModal({
             <button
               type="button"
               onClick={onClose}
-              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-800"
+              className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#D3590B] focus:ring-offset-2"
               aria-label="Fermer la fenêtre de création"
             >
-              <FontAwesomeIcon icon={faTimes} className="h-5 w-5" />
+              <FontAwesomeIcon
+                icon={faTimes}
+                className="h-5 w-5"
+                aria-hidden="true"
+              />
             </button>
           </div>
 
@@ -122,7 +126,10 @@ export default function CreateProjectModal({
                 htmlFor="project-name"
                 className="mb-2 block text-sm font-medium text-gray-700"
               >
-                Titre
+                Titre{" "}
+                <span className="text-red-600" aria-label="requis">
+                  *
+                </span>
               </label>
               <input
                 id="project-name"
@@ -132,6 +139,8 @@ export default function CreateProjectModal({
                 required
                 minLength={2}
                 maxLength={120}
+                aria-required="true"
+                autoComplete="off"
               />
             </div>
 
@@ -149,6 +158,7 @@ export default function CreateProjectModal({
                 rows={3}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
                 placeholder="Décris l'objectif du projet"
+                aria-label="Description du projet"
               />
             </div>
 
@@ -166,8 +176,9 @@ export default function CreateProjectModal({
                 rows={3}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm sm:text-base text-gray-900 outline-none transition focus:border-[#FF6B35] focus:ring-2 focus:ring-[#FF6B35]/20"
                 placeholder="Email1, email2, email3"
+                aria-describedby="contributors-help"
               />
-              <p className="mt-2 text-xs text-gray-600">
+              <p id="contributors-help" className="mt-2 text-xs text-gray-600">
                 Sépare les emails par une virgule, un point-virgule ou un retour
                 à la ligne.
               </p>
@@ -177,6 +188,7 @@ export default function CreateProjectModal({
               <p
                 className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
                 role="alert"
+                aria-live="polite"
               >
                 {errorMessage}
               </p>
@@ -186,14 +198,16 @@ export default function CreateProjectModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto cursor-pointer rounded-lg border border-gray-300 px-4 py-2.5 sm:px-5 sm:py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                className="w-full sm:w-auto cursor-pointer rounded-lg border border-gray-300 px-4 py-2.5 sm:px-5 sm:py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                aria-label="Annuler la création du projet"
               >
                 Annuler
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full sm:w-auto cursor-pointer rounded-lg bg-black px-4 py-2.5 sm:px-5 sm:py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full sm:w-auto cursor-pointer rounded-lg bg-black px-4 py-2.5 sm:px-5 sm:py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                aria-busy={isSubmitting}
               >
                 {isSubmitting ? "Création..." : "Créer"}
               </button>

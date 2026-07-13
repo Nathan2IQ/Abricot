@@ -14,14 +14,6 @@ async function forwardTaskRequest(
     const token = cookieStore.get("auth_token")?.value;
     const rawBody = method === "PUT" ? await request.text() : undefined;
 
-    console.log("[API task route] incoming", {
-      method,
-      projectId: params.id,
-      taskId: params.taskId,
-      hasToken: Boolean(token),
-      body: rawBody,
-    });
-
     if (!token) {
       return NextResponse.json(
         { success: false, message: "Non authentifié" },
@@ -42,22 +34,10 @@ async function forwardTaskRequest(
     );
 
     if (response.status === 204) {
-      console.log("[API task route] backend response", {
-        method,
-        status: response.status,
-        ok: response.ok,
-      });
       return new NextResponse(null, { status: 204 });
     }
 
     const data = await response.json().catch(() => null);
-
-    console.log("[API task route] backend response", {
-      method,
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
       return NextResponse.json(
@@ -68,12 +48,7 @@ async function forwardTaskRequest(
 
     return NextResponse.json(data);
   } catch (error) {
-    console.error("[API task route] server error", {
-      method,
-      projectId: params.id,
-      taskId: params.taskId,
-      error,
-    });
+    console.error("[API task route] Error:", error);
     return NextResponse.json(
       { success: false, message: "Erreur serveur" },
       { status: 500 },

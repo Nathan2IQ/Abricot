@@ -31,8 +31,8 @@ export default function ViewToggle({ onViewChange }: ViewToggleProps) {
         onClick={() => handleViewChange("list")}
         className={`px-4 sm:px-5 lg:px-6 py-2 sm:py-3 text-sm lg:text-base cursor-pointer rounded-xl transition-colors ${
           activeView === "list"
-            ? "bg-[#FFE8D9] text-[#D3590B]"
-            : "bg-white text-[#D3590B] hover:bg-[#FFE8D9]"
+            ? "bg-[#FFF4F0] text-[#BE4E09]"
+            : "bg-white text-[#BE4E09] hover:bg-[#FFF4F0]"
         }`}
         aria-pressed={activeView === "list"}
         aria-label="Afficher en liste"
@@ -48,8 +48,8 @@ export default function ViewToggle({ onViewChange }: ViewToggleProps) {
         onClick={() => handleViewChange("kanban")}
         className={`px-4 sm:px-5 lg:px-6 py-2 sm:py-3 text-sm lg:text-base cursor-pointer rounded-xl transition-colors ${
           activeView === "kanban"
-            ? "bg-[#FFE8D9] text-[#D3590B]"
-            : "bg-white text-[#D3590B] hover:bg-[#FFE8D9]"
+            ? "bg-[#FFF4F0] text-[#BE4E09]"
+            : "bg-white text-[#BE4E09] hover:bg-[#FFF4F0]"
         }`}
         aria-pressed={activeView === "kanban"}
         aria-label="Afficher en kanban"

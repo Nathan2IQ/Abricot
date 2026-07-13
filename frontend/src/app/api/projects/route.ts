@@ -10,11 +10,6 @@ export async function POST(request: Request) {
     const cookieStore = await cookies();
     const token = cookieStore.get("auth_token")?.value;
 
-    console.log("[API projects POST] incoming", {
-      hasToken: Boolean(token),
-      body,
-    });
-
     if (!token) {
       return NextResponse.json(
         { success: false, message: "Non authentifié" },
@@ -32,12 +27,6 @@ export async function POST(request: Request) {
     });
 
     const data = await response.json().catch(() => null);
-
-    console.log("[API projects POST] backend response", {
-      status: response.status,
-      ok: response.ok,
-      data,
-    });
 
     if (!response.ok) {
       return NextResponse.json(
