@@ -39,13 +39,11 @@
 - **Branch** : `main`
 - **Root Directory** : `BackEnd` ⚠️ **TRÈS IMPORTANT**
 - **Runtime** : `Node`
-- **Build Command** : `npm install && npm run build && npx prisma db push --skip-generate --accept-data-loss`
+- **Build Command** : `npm install && npm run build`
 - **Start Command** : `npm start` ⚠️ **PAS `npm run dev` ni `nodemon`**
 - **Instance Type** : `Free`
 
-> ⚠️ **IMPORTANT** : 
-> - La Build Command inclut `prisma db push` pour créer le schéma de la base de données
-> - Utilisez `npm start` et NON `npm run dev`. Le serveur doit écouter sur `0.0.0.0` en production.
+> ⚠️ **IMPORTANT** : Utilisez `npm start` et NON `npm run dev`. Le serveur doit écouter sur `0.0.0.0` en production.
 
 #### 🔐 Variables d'Environnement
 
@@ -90,11 +88,30 @@ app.use(
 2. Render va :
    - Installer les dépendances (`npm install`)
    - Générer Prisma Client (`prisma generate`)
-   - Exécuter les migrations (`prisma migrate deploy`)
    - Compiler TypeScript (`tsc`)
    - Démarrer le serveur (`npm start`)
 
 ⏱️ Le premier déploiement prend 3-5 minutes.
+
+> ⚠️ **Note** : Le serveur va démarrer mais crasher car le schéma DB n'est pas encore créé. C'est normal, passez à l'étape 5.
+
+---
+
+### 5. Synchroniser le Schéma de la Base de Données
+
+**Après le premier build**, créez le schéma dans la base PostgreSQL :
+
+1. Dans le dashboard Render, allez dans votre service **abricot-backend**
+2. Cliquez sur l'onglet **"Shell"** (en haut)
+3. Exécutez cette commande :
+   ```bash
+   npx prisma db push --skip-generate --accept-data-loss
+   ```
+4. Vous devriez voir :
+   ```
+   ✔ Database synchronized
+   ```
+5. Le serveur va redémarrer automatiquement
 
 ---
 
@@ -102,7 +119,7 @@ app.use(
 
 ### 1. Backend Live
 
-Une fois déployé, vous aurez une URL type :
+Une fois le schéma synchronisé, vous aurez une URL type :
 
 ```
 https://abricot-backend.onrender.com
@@ -206,10 +223,24 @@ npm run seed
 **Cause** : Le build TypeScript a échoué, les fichiers dans `dist/` n'ont pas été générés.
 
 **Solutions** :
+
 - ✅ Vérifiez les logs de build pour voir les erreurs TypeScript
 - ✅ Compilez localement avec `npm run build` pour identifier les erreurs
 - ✅ Assurez-vous que la Build Command inclut bien `npm run build`
 - ✅ Vérifiez que `tsconfig.json` est correct
+
+### Erreur "P1001: Can't reach database server at `localhost:5432`"
+
+**Symptôme** : Le build échoue avec "Can't reach database server" pendant `prisma db push`.
+
+**Cause** : La variable `DATABASE_URL` n'est pas configurée ou pointe vers `localhost` au lieu de la DB Render.
+
+**Solutions** :
+
+- ✅ Vérifiez que `DATABASE_URL` est définie dans **Environment Variables**
+- ✅ Utilisez l'**Internal Database URL** (pas External) depuis votre PostgreSQL Render
+- ✅ Format attendu : `postgresql://user:password@dpg-xxxxx-a/abricot`
+- ✅ Si le problème persiste, retirez `prisma db push` de la Build Command et exécutez-le manuellement dans le Shell après le déploiement (voir étape 5)
 
 ### Erreur "Module not found"
 
