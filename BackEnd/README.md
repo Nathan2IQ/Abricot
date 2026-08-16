@@ -9,6 +9,7 @@ Cette base de code est l'API REST complète pour l'authentification et la gestio
 ---
 
 ## Installation et Démarrage
+
 1. Renommer le fichier `.env.example` en `.env` et changer la valeur de `JWT_SECRET`
 
 2. Installer les dépendances :
@@ -99,12 +100,12 @@ Le script crée les éléments suivants :
 ### Permissions par Rôle
 
 | Action                        | Propriétaire | Admin | Contributeur |
-|-------------------------------|--------------|-------|--------------|
-| Créer un projet               | ✅            | ❌     | ❌            |
-| Modifier le projet            | ✅            | ✅     | ❌            |
-| Supprimer le projet           | ✅            | ❌     | ❌            |
-| Ajouter/Retirer contributeurs | ✅            | ✅     | ❌            |
-| Lister les tâches d'un projet | ✅            | ✅     | ✅            |
-| Créer des tâches              | ✅            | ✅     | ✅            |
-| Modifier des tâches           | ✅            | ✅     | ✅            |
-| Supprimer des tâches          | ✅            | ✅     | ✅            |
+| ----------------------------- | ------------ | ----- | ------------ |
+| Créer un projet               | ✅           | ❌    | ❌           |
+| Modifier le projet            | ✅           | ✅    | ❌           |
+| Supprimer le projet           | ✅           | ❌    | ❌           |
+| Ajouter/Retirer contributeurs | ✅           | ✅    | ❌           |
+| Lister les tâches d'un projet | ✅           | ✅    | ✅           |
+| Créer des tâches              | ✅           | ✅    | ✅           |
+| Modifier des tâches           | ✅           | ✅    | ✅           |
+| Supprimer des tâches          | ✅           | ✅    | ✅           |

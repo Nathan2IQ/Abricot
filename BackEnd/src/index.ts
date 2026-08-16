@@ -31,15 +31,20 @@ const PORT = process.env.PORT || 8000;
 app.use(helmet());
 
 // Middleware CORS
-const allowedOrigins = process.env.NODE_ENV === "production"
-  ? [process.env.FRONTEND_URL || "https://abricot-nine.vercel.app"]
-  : ["http://localhost:3000", "http://localhost:8000", "http://localhost:8001"];
+const allowedOrigins =
+  process.env.NODE_ENV === "production"
+    ? [process.env.FRONTEND_URL || "https://abricot-nine.vercel.app"]
+    : [
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "http://localhost:8001",
+      ];
 
 app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
-  })
+  }),
 );
 
 // Middleware de logging
@@ -57,7 +62,7 @@ app.use(
     customCss: ".swagger-ui .topbar { display: none }",
     customSiteTitle: "API Gestionnaire de Projets - Documentation",
     customfavIcon: "/favicon.ico",
-  })
+  }),
 );
 
 // Routes
@@ -135,7 +140,7 @@ app.use(
     error: any,
     req: express.Request,
     res: express.Response,
-    next: express.NextFunction
+    next: express.NextFunction,
   ) => {
     console.error("Erreur serveur:", error);
 
@@ -147,7 +152,7 @@ app.use(
           ? error.message
           : "Internal server error",
     });
-  }
+  },
 );
 
 // Fonction pour démarrer le serveur
@@ -158,11 +163,13 @@ const startServer = async () => {
     console.log("✅ Connexion à la base de données établie");
 
     // Démarrer le serveur
-    app.listen(PORT, () => {
+    // Render nécessite d'écouter sur 0.0.0.0
+    const host = process.env.NODE_ENV === "production" ? "0.0.0.0" : "localhost";
+    app.listen(PORT, host, () => {
       console.log(`🚀 Serveur démarré sur le port ${PORT}`);
       console.log(`📊 Environnement: ${process.env.NODE_ENV || "development"}`);
-      console.log(`🔗 URL: http://localhost:${PORT}`);
-      console.log(`📖 Documentation: http://localhost:${PORT}`);
+      console.log(`🔗 URL: http://${host}:${PORT}`);
+      console.log(`📖 Documentation: http://${host}:${PORT}/api-docs`);
     });
   } catch (error) {
     console.error("❌ Erreur lors du démarrage du serveur:", error);

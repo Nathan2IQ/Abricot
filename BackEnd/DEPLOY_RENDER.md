@@ -1,6 +1,7 @@
 # 🚀 Guide de Déploiement Backend sur Render
 
 ## Prérequis
+
 - Compte Render : https://render.com
 - Code poussé sur GitHub
 - Frontend déployé sur Vercel
@@ -32,28 +33,32 @@
 4. Configurez :
 
 #### 🔧 Configuration Générale
+
 - **Name** : `abricot-backend`
 - **Region** : Même région que la DB (Europe/Frankfurt)
 - **Branch** : `main`
 - **Root Directory** : `BackEnd` ⚠️ **TRÈS IMPORTANT**
 - **Runtime** : `Node`
 - **Build Command** : `npm install && npm run build`
-- **Start Command** : `npm start`
+- **Start Command** : `npm start` ⚠️ **PAS `npm run dev` ni `nodemon`**
 - **Instance Type** : `Free`
+
+> ⚠️ **IMPORTANT** : Assurez-vous d'utiliser `npm start` et NON `npm run dev`. Le serveur doit écouter sur `0.0.0.0` en production.
 
 #### 🔐 Variables d'Environnement
 
 Ajoutez ces variables dans **Environment Variables** :
 
-| Key | Value | Note |
-|-----|-------|------|
-| `DATABASE_URL` | `<Internal DB URL copiée>` | URL de votre base PostgreSQL |
-| `JWT_SECRET` | `votre-secret-super-securise-min-32-chars` | Générez une chaîne aléatoire forte |
-| `PORT` | `10000` | Port par défaut de Render |
-| `NODE_ENV` | `production` | Environnement de production |
-| `FRONTEND_URL` | `https://abricot-nine.vercel.app` | URL de votre frontend Vercel |
+| Key            | Value                                      | Note                               |
+| -------------- | ------------------------------------------ | ---------------------------------- |
+| `DATABASE_URL` | `<Internal DB URL copiée>`                 | URL de votre base PostgreSQL       |
+| `JWT_SECRET`   | `votre-secret-super-securise-min-32-chars` | Générez une chaîne aléatoire forte |
+| `PORT`         | `10000`                                    | Port par défaut de Render          |
+| `NODE_ENV`     | `production`                               | Environnement de production        |
+| `FRONTEND_URL` | `https://abricot-nine.vercel.app`          | URL de votre frontend Vercel       |
 
 **💡 Pour générer un JWT_SECRET sécurisé** :
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
@@ -71,7 +76,7 @@ app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
     credentials: true,
-  })
+  }),
 );
 ```
 
@@ -94,18 +99,23 @@ app.use(
 ## ✅ Vérification
 
 ### 1. Backend Live
+
 Une fois déployé, vous aurez une URL type :
+
 ```
 https://abricot-backend.onrender.com
 ```
 
 ### 2. Tester l'API
+
 Accédez à la documentation Swagger :
+
 ```
 https://abricot-backend.onrender.com/api-docs
 ```
 
 ### 3. Tester la santé
+
 ```bash
 curl https://abricot-backend.onrender.com/health
 ```
@@ -134,6 +144,7 @@ Pour peupler la base avec des données de test :
 1. Dans le dashboard Render, allez dans votre service backend
 2. Ouvrez l'onglet **"Shell"**
 3. Exécutez :
+
 ```bash
 npm run seed
 ```
@@ -143,12 +154,15 @@ npm run seed
 ## 📊 Monitoring & Logs
 
 ### Voir les logs
+
 - Dashboard Render → Votre service → Onglet **"Logs"**
 
 ### Métriques
+
 - Dashboard Render → Votre service → Onglet **"Metrics"**
 
 ### Redéployer manuellement
+
 - Dashboard Render → Votre service → **"Manual Deploy"** → **"Clear build cache & deploy"**
 
 ---
@@ -166,19 +180,38 @@ npm run seed
 
 ## 🐛 Troubleshooting
 
+### Erreur "No open ports detected"
+
+**Symptôme** : Le build réussit mais Render indique "No open ports detected, continuing to scan..."
+
+**Causes** :
+1. Le serveur n'écoute pas sur `0.0.0.0` (résolu dans le code)
+2. La Start Command utilise `nodemon` ou `npm run dev` au lieu de `npm start`
+3. Le serveur plante au démarrage (erreur de connexion DB, etc.)
+
+**Solutions** :
+- ✅ Vérifiez que **Start Command** = `npm start` (pas `npm run dev`)
+- ✅ Vérifiez que `NODE_ENV=production` dans les variables d'environnement
+- ✅ Vérifiez que `DATABASE_URL` est correcte
+- ✅ Regardez les logs pour voir l'erreur exacte au démarrage
+
 ### Erreur "Module not found"
+
 - Vérifiez que **Root Directory** = `BackEnd`
 - Vérifiez les dépendances dans `package.json`
 
 ### Erreur Prisma
+
 - Vérifiez `DATABASE_URL` dans les variables d'environnement
 - Assurez-vous que `schema.prisma` utilise `provider = "postgresql"`
 
 ### Erreur CORS
+
 - Vérifiez `FRONTEND_URL` dans les variables d'environnement
 - Vérifiez la configuration CORS dans `src/index.ts`
 
 ### Build échoue
+
 - Regardez les logs détaillés dans l'onglet "Logs"
 - Vérifiez que tous les fichiers TypeScript compilent localement
 
@@ -190,7 +223,7 @@ npm run seed
 ✅ Activez HTTPS (automatique sur Render)  
 ✅ Utilisez un JWT_SECRET fort (minimum 32 caractères)  
 ✅ Limitez les origines CORS au frontend uniquement  
-✅ Activez Helmet pour les headers de sécurité (déjà fait)  
+✅ Activez Helmet pour les headers de sécurité (déjà fait)
 
 ---
 
