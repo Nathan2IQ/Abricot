@@ -2,6 +2,12 @@
 
 Cette base de code est l'API REST complète pour l'authentification et la gestion de projets avec système de rôles et de permissions pour le projet Abricot.
 
+## 🚀 Déploiement en Production
+
+📖 **Guide complet de déploiement sur Render** : [DEPLOY_RENDER.md](./DEPLOY_RENDER.md)
+
+---
+
 ## Installation et Démarrage
 1. Renommer le fichier `.env.example` en `.env` et changer la valeur de `JWT_SECRET`
 
