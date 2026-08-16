@@ -39,11 +39,13 @@
 - **Branch** : `main`
 - **Root Directory** : `BackEnd` ⚠️ **TRÈS IMPORTANT**
 - **Runtime** : `Node`
-- **Build Command** : `npm install && npm run build`
+- **Build Command** : `npm install && npm run build && npx prisma db push --skip-generate --accept-data-loss`
 - **Start Command** : `npm start` ⚠️ **PAS `npm run dev` ni `nodemon`**
 - **Instance Type** : `Free`
 
-> ⚠️ **IMPORTANT** : Assurez-vous d'utiliser `npm start` et NON `npm run dev`. Le serveur doit écouter sur `0.0.0.0` en production.
+> ⚠️ **IMPORTANT** : 
+> - La Build Command inclut `prisma db push` pour créer le schéma de la base de données
+> - Utilisez `npm start` et NON `npm run dev`. Le serveur doit écouter sur `0.0.0.0` en production.
 
 #### 🔐 Variables d'Environnement
 
@@ -185,15 +187,29 @@ npm run seed
 **Symptôme** : Le build réussit mais Render indique "No open ports detected, continuing to scan..."
 
 **Causes** :
+
 1. Le serveur n'écoute pas sur `0.0.0.0` (résolu dans le code)
 2. La Start Command utilise `nodemon` ou `npm run dev` au lieu de `npm start`
 3. Le serveur plante au démarrage (erreur de connexion DB, etc.)
 
 **Solutions** :
+
 - ✅ Vérifiez que **Start Command** = `npm start` (pas `npm run dev`)
 - ✅ Vérifiez que `NODE_ENV=production` dans les variables d'environnement
 - ✅ Vérifiez que `DATABASE_URL` est correcte
 - ✅ Regardez les logs pour voir l'erreur exacte au démarrage
+
+### Erreur "Cannot find module '/opt/render/project/src/BackEnd/dist/index.js'"
+
+**Symptôme** : Le serveur ne démarre pas, le module compilé n'est pas trouvé.
+
+**Cause** : Le build TypeScript a échoué, les fichiers dans `dist/` n'ont pas été générés.
+
+**Solutions** :
+- ✅ Vérifiez les logs de build pour voir les erreurs TypeScript
+- ✅ Compilez localement avec `npm run build` pour identifier les erreurs
+- ✅ Assurez-vous que la Build Command inclut bien `npm run build`
+- ✅ Vérifiez que `tsconfig.json` est correct
 
 ### Erreur "Module not found"
 

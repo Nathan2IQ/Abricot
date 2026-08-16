@@ -25,7 +25,7 @@ dotenv.config();
 
 // Créer l'application Express
 const app = express();
-const PORT = process.env.PORT || 8000;
+const PORT = parseInt(process.env.PORT || "8000", 10);
 
 // Middleware de sécurité
 app.use(helmet());
@@ -164,7 +164,8 @@ const startServer = async () => {
 
     // Démarrer le serveur
     // Render nécessite d'écouter sur 0.0.0.0
-    const host = process.env.NODE_ENV === "production" ? "0.0.0.0" : "localhost";
+    const host =
+      process.env.NODE_ENV === "production" ? "0.0.0.0" : "localhost";
     app.listen(PORT, host, () => {
       console.log(`🚀 Serveur démarré sur le port ${PORT}`);
       console.log(`📊 Environnement: ${process.env.NODE_ENV || "development"}`);
